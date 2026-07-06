@@ -1,0 +1,87 @@
+
+LOGISTICS DATABASE SCHEMA
+=========================
+
+1. DRIVERS
+   - Primary Key: driver_id
+   - Contains: Driver demographics, employment history, license info
+   
+2. TRUCKS
+   - Primary Key: truck_id
+   - Contains: Fleet equipment details, acquisition info, status
+   
+3. TRAILERS
+   - Primary Key: trailer_id
+   - Contains: Trailer inventory, types, status
+   
+4. CUSTOMERS
+   - Primary Key: customer_id
+   - Contains: Customer accounts, contract types, revenue potential
+   
+5. FACILITIES
+   - Primary Key: facility_id
+   - Contains: Terminal and warehouse locations, capacity
+   
+6. ROUTES
+   - Primary Key: route_id
+   - Contains: Origin-destination pairs, distances, rate structures
+   
+7. LOADS
+   - Primary Key: load_id
+   - Foreign Keys: customer_id, route_id
+   - Contains: Shipment details, revenue, booking type
+   
+8. TRIPS
+   - Primary Key: trip_id
+   - Foreign Keys: load_id, driver_id, truck_id, trailer_id
+   - Contains: Actual trip performance, fuel consumption, duration
+   
+9. FUEL_PURCHASES
+   - Primary Key: fuel_purchase_id
+   - Foreign Keys: trip_id, truck_id, driver_id
+   - Contains: Fuel transactions, prices, locations
+   
+10. MAINTENANCE_RECORDS
+    - Primary Key: maintenance_id
+    - Foreign Keys: truck_id
+    - Contains: Service history, costs, downtime
+    
+11. DELIVERY_EVENTS
+    - Primary Key: event_id
+    - Foreign Keys: load_id, trip_id, facility_id
+    - Contains: Pickup/delivery timestamps, detention, on-time status
+    
+12. SAFETY_INCIDENTS
+    - Primary Key: incident_id
+    - Foreign Keys: trip_id, truck_id, driver_id
+    - Contains: Accidents, violations, damage costs
+    
+13. DRIVER_MONTHLY_METRICS (Aggregated)
+    - Composite Key: driver_id, month
+    - Contains: Monthly performance summaries per driver
+    
+14. TRUCK_UTILIZATION_METRICS (Aggregated)
+    - Composite Key: truck_id, month
+    - Contains: Monthly equipment utilization summaries
+
+KEY RELATIONSHIPS:
+- loads -> customers (many-to-one)
+- loads -> routes (many-to-one)
+- trips -> loads (one-to-one)
+- trips -> drivers (many-to-one)
+- trips -> trucks (many-to-one)
+- trips -> trailers (many-to-one)
+- fuel_purchases -> trips (many-to-one)
+- maintenance_records -> trucks (many-to-one)
+- delivery_events -> trips (many-to-one)
+- safety_incidents -> trips (many-to-one)
+
+ANALYTICAL USE CASES:
+1. Driver performance: On-time rates, MPG, revenue per mile
+2. Route profitability: Revenue vs costs by lane
+3. Fleet utilization: Miles per truck, revenue per asset
+4. Maintenance analysis: Cost per mile, downtime impact
+5. Fuel efficiency: MPG trends, fuel cost by route
+6. Customer analysis: Revenue by customer, service levels
+7. Safety metrics: Incident rates, preventable accidents
+8. Seasonal patterns: Load volume, rate fluctuations

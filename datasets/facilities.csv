@@ -1,0 +1,51 @@
+facility_id,facility_name,facility_type,city,state,latitude,longitude,dock_doors,operating_hours
+FAC00001,Houston Distribution Center,Cross-Dock,Houston,TX,29.7604,-95.3698,125,24/7
+FAC00002,Kansas City Hub,Cross-Dock,Kansas City,MO,39.0997,-94.5786,33,7AM-7PM
+FAC00003,Charlotte Distribution Center,Distribution Center,Charlotte,NC,35.2271,-80.8431,138,24/7
+FAC00004,Chicago Distribution Center,Distribution Center,Chicago,IL,41.8781,-87.6298,38,8AM-5PM
+FAC00005,Indianapolis Hub,Distribution Center,Indianapolis,IN,39.7684,-86.1581,56,8AM-5PM
+FAC00006,Atlanta Warehouse,Distribution Center,Atlanta,GA,33.749,-84.388,149,8AM-5PM
+FAC00007,Detroit Warehouse,Terminal,Detroit,MI,42.3314,-83.0458,44,24/7
+FAC00008,Philadelphia Hub,Cross-Dock,Philadelphia,PA,39.9526,-75.1652,110,8AM-5PM
+FAC00009,Nashville Distribution Center,Terminal,Nashville,TN,36.1627,-86.7816,115,6AM-10PM
+FAC00010,Indianapolis Distribution Center,Warehouse,Indianapolis,IN,39.7684,-86.1581,92,6AM-10PM
+FAC00011,Nashville Distribution Center,Cross-Dock,Nashville,TN,36.1627,-86.7816,125,8AM-5PM
+FAC00012,Atlanta Distribution Center,Distribution Center,Atlanta,GA,33.749,-84.388,16,8AM-5PM
+FAC00013,Nashville Distribution Center,Distribution Center,Nashville,TN,36.1627,-86.7816,55,8AM-5PM
+FAC00014,Indianapolis Warehouse,Distribution Center,Indianapolis,IN,39.7684,-86.1581,126,8AM-5PM
+FAC00015,Phoenix Distribution Center,Terminal,Phoenix,AZ,33.4484,-112.074,61,24/7
+FAC00016,Detroit Hub,Distribution Center,Detroit,MI,42.3314,-83.0458,126,24/7
+FAC00017,Omaha Distribution Center,Cross-Dock,Omaha,NE,41.2565,-95.9345,33,6AM-10PM
+FAC00018,Dallas Distribution Center,Cross-Dock,Dallas,TX,32.7767,-96.797,74,7AM-7PM
+FAC00019,Houston Warehouse,Warehouse,Houston,TX,29.7604,-95.3698,92,6AM-10PM
+FAC00020,Nashville Terminal,Cross-Dock,Nashville,TN,36.1627,-86.7816,51,24/7
+FAC00021,Las Vegas Terminal,Distribution Center,Las Vegas,NV,36.1699,-115.1398,41,6AM-10PM
+FAC00022,New York Distribution Center,Cross-Dock,New York,NY,40.7128,-74.006,33,6AM-10PM
+FAC00023,Portland Warehouse,Cross-Dock,Portland,OR,45.5152,-122.6784,39,24/7
+FAC00024,Denver Distribution Center,Terminal,Denver,CO,39.7392,-104.9903,125,7AM-7PM
+FAC00025,Oklahoma City Terminal,Cross-Dock,Oklahoma City,OK,35.4676,-97.5164,102,24/7
+FAC00026,Atlanta Warehouse,Warehouse,Atlanta,GA,33.749,-84.388,31,6AM-10PM
+FAC00027,Philadelphia Hub,Cross-Dock,Philadelphia,PA,39.9526,-75.1652,144,24/7
+FAC00028,Las Vegas Hub,Terminal,Las Vegas,NV,36.1699,-115.1398,108,7AM-7PM
+FAC00029,Miami Warehouse,Terminal,Miami,FL,25.7617,-80.1918,140,7AM-7PM
+FAC00030,Detroit Hub,Cross-Dock,Detroit,MI,42.3314,-83.0458,50,24/7
+FAC00031,Los Angeles Warehouse,Cross-Dock,Los Angeles,CA,34.0522,-118.2437,106,24/7
+FAC00032,Miami Distribution Center,Terminal,Miami,FL,25.7617,-80.1918,150,24/7
+FAC00033,Miami Distribution Center,Distribution Center,Miami,FL,25.7617,-80.1918,107,8AM-5PM
+FAC00034,Charlotte Terminal,Cross-Dock,Charlotte,NC,35.2271,-80.8431,21,6AM-10PM
+FAC00035,Phoenix Distribution Center,Terminal,Phoenix,AZ,33.4484,-112.074,53,6AM-10PM
+FAC00036,Omaha Distribution Center,Cross-Dock,Omaha,NE,41.2565,-95.9345,95,7AM-7PM
+FAC00037,Portland Terminal,Terminal,Portland,OR,45.5152,-122.6784,48,6AM-10PM
+FAC00038,Salt Lake City Warehouse,Distribution Center,Salt Lake City,UT,40.7608,-111.891,51,8AM-5PM
+FAC00039,Charlotte Distribution Center,Warehouse,Charlotte,NC,35.2271,-80.8431,47,7AM-7PM
+FAC00040,Nashville Distribution Center,Cross-Dock,Nashville,TN,36.1627,-86.7816,55,24/7
+FAC00041,Milwaukee Distribution Center,Cross-Dock,Milwaukee,WI,43.0389,-87.9065,23,24/7
+FAC00042,Salt Lake City Terminal,Warehouse,Salt Lake City,UT,40.7608,-111.891,117,7AM-7PM
+FAC00043,Atlanta Warehouse,Warehouse,Atlanta,GA,33.749,-84.388,88,7AM-7PM
+FAC00044,Las Vegas Terminal,Cross-Dock,Las Vegas,NV,36.1699,-115.1398,89,7AM-7PM
+FAC00045,Houston Hub,Distribution Center,Houston,TX,29.7604,-95.3698,124,8AM-5PM
+FAC00046,Los Angeles Distribution Center,Cross-Dock,Los Angeles,CA,34.0522,-118.2437,83,24/7
+FAC00047,Milwaukee Hub,Warehouse,Milwaukee,WI,43.0389,-87.9065,56,8AM-5PM
+FAC00048,Indianapolis Warehouse,Terminal,Indianapolis,IN,39.7684,-86.1581,40,24/7
+FAC00049,Dallas Distribution Center,Distribution Center,Dallas,TX,32.7767,-96.797,43,7AM-7PM
+FAC00050,Detroit Hub,Cross-Dock,Detroit,MI,42.3314,-83.0458,61,8AM-5PM

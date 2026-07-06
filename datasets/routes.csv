@@ -1,0 +1,59 @@
+route_id,origin_city,origin_state,destination_city,destination_state,typical_distance_miles,base_rate_per_mile,fuel_surcharge_rate,typical_transit_days
+RTE00001,Atlanta,GA,Chicago,IL,677,1.7,0.19,1
+RTE00002,Atlanta,GA,Miami,FL,697,2.08,0.22,1
+RTE00003,Chicago,IL,Los Angeles,CA,2003,2.55,0.29,3
+RTE00004,Chicago,IL,Portland,OR,2017,1.84,0.19,3
+RTE00005,Chicago,IL,Las Vegas,NV,1749,2.41,0.26,3
+RTE00006,Chicago,IL,Charlotte,NC,675,2.13,0.28,1
+RTE00007,Dallas,TX,New York,NY,1576,2.54,0.32,2
+RTE00008,Dallas,TX,Denver,CO,762,2.62,0.15,1
+RTE00009,Dallas,TX,Indianapolis,IN,878,1.95,0.17,1
+RTE00010,New York,NY,Philadelphia,PA,92,1.61,0.17,1
+RTE00011,New York,NY,Columbus,OH,547,1.69,0.24,1
+RTE00012,Phoenix,AZ,Philadelphia,PA,2389,2.71,0.19,4
+RTE00013,Phoenix,AZ,Denver,CO,673,1.7,0.21,1
+RTE00014,Phoenix,AZ,Kansas City,MO,1204,2.14,0.19,2
+RTE00015,Philadelphia,PA,New York,NY,92,2.79,0.15,1
+RTE00016,Philadelphia,PA,Seattle,WA,2729,2.5,0.17,4
+RTE00017,Philadelphia,PA,Minneapolis,MN,1130,1.81,0.34,1
+RTE00018,Philadelphia,PA,Indianapolis,IN,670,2.07,0.28,1
+RTE00019,Houston,TX,Detroit,MI,1271,2.33,0.32,2
+RTE00020,Houston,TX,Seattle,WA,2172,1.77,0.34,3
+RTE00021,Houston,TX,Portland,OR,2108,2.45,0.28,3
+RTE00022,Houston,TX,Memphis,TN,557,1.95,0.29,1
+RTE00023,Miami,FL,Dallas,TX,1276,2.33,0.17,2
+RTE00024,Miami,FL,Philadelphia,PA,1175,2.48,0.32,2
+RTE00025,Miami,FL,Seattle,WA,3141,1.65,0.18,5
+RTE00026,Miami,FL,Denver,CO,1984,1.72,0.28,3
+RTE00027,Detroit,MI,Houston,TX,1271,2.02,0.33,2
+RTE00028,Seattle,WA,Houston,TX,2172,1.89,0.26,3
+RTE00029,Seattle,WA,Charlotte,NC,2623,2.47,0.34,4
+RTE00030,Seattle,WA,Indianapolis,IN,2147,2.48,0.33,3
+RTE00031,Denver,CO,Kansas City,MO,640,2.19,0.29,1
+RTE00032,Portland,OR,Detroit,MI,2259,1.99,0.2,3
+RTE00033,Portland,OR,Seattle,WA,167,2.42,0.24,1
+RTE00034,Portland,OR,Columbus,OH,2332,2.12,0.34,4
+RTE00035,Las Vegas,NV,Dallas,TX,1229,1.69,0.28,2
+RTE00036,Las Vegas,NV,Los Angeles,CA,262,2.63,0.33,1
+RTE00037,Las Vegas,NV,New York,NY,2561,1.52,0.21,4
+RTE00038,Las Vegas,NV,Kansas City,MO,1311,2.71,0.24,2
+RTE00039,Minneapolis,MN,Atlanta,GA,1044,2.08,0.33,1
+RTE00040,Minneapolis,MN,Los Angeles,CA,1749,2.38,0.3,3
+RTE00041,Minneapolis,MN,Houston,TX,1216,2.75,0.21,2
+RTE00042,Charlotte,NC,Seattle,WA,2623,2.39,0.18,4
+RTE00043,Charlotte,NC,Denver,CO,1559,1.55,0.16,2
+RTE00044,Charlotte,NC,Portland,OR,2627,2.69,0.31,4
+RTE00045,Charlotte,NC,Memphis,TN,597,2.33,0.23,1
+RTE00046,Columbus,OH,Los Angeles,CA,2269,2.74,0.22,3
+RTE00047,Columbus,OH,Philadelphia,PA,476,2.06,0.16,1
+RTE00048,Columbus,OH,Portland,OR,2332,2.69,0.34,4
+RTE00049,Columbus,OH,Minneapolis,MN,720,2.62,0.2,1
+RTE00050,Columbus,OH,Kansas City,MO,712,1.94,0.24,1
+RTE00051,Memphis,TN,Los Angeles,CA,1840,1.85,0.25,3
+RTE00052,Memphis,TN,Minneapolis,MN,804,1.63,0.34,1
+RTE00053,Kansas City,MO,Atlanta,GA,777,2.35,0.27,1
+RTE00054,Kansas City,MO,Los Angeles,CA,1557,2.01,0.19,2
+RTE00055,Kansas City,MO,Miami,FL,1429,2.51,0.25,2
+RTE00056,Kansas City,MO,Portland,OR,1718,2.47,0.18,2
+RTE00057,Kansas City,MO,Charlotte,NC,921,2.45,0.3,1
+RTE00058,Kansas City,MO,Indianapolis,IN,519,2.27,0.19,1
