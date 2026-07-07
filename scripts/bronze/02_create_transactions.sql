@@ -58,3 +58,24 @@ CREATE TABLE bronze.loads
     booking_type NVARCHAR(20) NULL
 );
 GO
+
+IF OBJECT_ID('bronze.maintenance_records', 'U') IS NOT NULL
+    DROP TABLE bronze.maintenance_records;
+GO
+
+CREATE TABLE bronze.maintenance_records
+(
+    maintenance_id NVARCHAR(20) NULL,
+    truck_id NVARCHAR(20) NULL,
+    maintenance_date DATE NULL,
+    maintenance_type NVARCHAR(20) NULL,
+    odometer_reading INT NULL,
+    labor_hours FLOAT NULL,
+    labor_cost DECIMAL(10,3) NULL,
+    parts_cost DECIMAL(10,3) NULL,
+    total_cost DECIMAL(10,3) NULL,
+    facility_location NVARCHAR(20) NULL,
+    downtime_hours FLOAT NULL,
+    service_description NVARCHAR(50) NULL
+);
+GO
