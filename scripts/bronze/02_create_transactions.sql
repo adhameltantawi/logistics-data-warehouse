@@ -104,3 +104,27 @@ CREATE TABLE bronze.safety_incidents
     description NVARCHAR(200) NULL
 );
 GO
+
+
+IF OBJECT_ID('bronze.trips', 'U') IS NOT NULL
+    DROP TABLE bronze.trips;
+GO
+
+CREATE TABLE bronze.trips
+(
+    trip_id NVARCHAR(20) NULL,
+    load_id NVARCHAR(20) NULL,
+    driver_id NVARCHAR(20) NULL,
+    truck_id NVARCHAR(20) NULL,
+    trailer_id NVARCHAR(20) NULL,
+    dispatch_date DATE NULL,
+    actual_distance_miles INT NULL,
+    actual_duration_hours FLOAT NULL,
+    fuel_gallons_used FLOAT NULL,
+    average_mpg FLOAT NULL,
+    idle_time_hours FLOAT NULL,
+    trip_status NVARCHAR(15) NULL
+);
+GO
+
+
