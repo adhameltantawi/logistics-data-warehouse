@@ -68,9 +68,18 @@ BEGIN
         );
     END TRY
     BEGIN CATCH
-
+        PRINT '========================================================';
+        PRINT 'ERROR OCCURRED DURING LOADING REFERENCE IN BRONZE LAYER';
+        PRINT 'Error Message: ' + ERROR_MESSAGE() ;
+        PRINT 'Error Number: ' + CAST(ERROR_NUMBER() AS NVARCHAR(10));
+        PRINT 'Error State: ' + CAST(ERROR_STATE() AS NVARCHAR(10));
+        PRINT '========================================================';
     END CATCH
 END;
+
+EXEC bronze.load_reference_bronze
+
+
 -- SELECT * FROM bronze.drivers
 -- SELECT * FROM bronze.customers
 -- SELECT * FROM bronze.facilities
