@@ -22,8 +22,7 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SELECT @rows = COUNT(*)
-        FROM bronze.drivers;
+        SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> SUCCESS: drivers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
@@ -43,8 +42,7 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SELECT @rows = COUNT(*)
-        FROM bronze.customers;
+        SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> SUCCESS: customers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
@@ -64,8 +62,7 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SELECT @rows = COUNT(*)
-        FROM bronze.facilities;
+        SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> SUCCESS: facilities ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
@@ -85,8 +82,7 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SELECT @rows = COUNT(*)
-        FROM bronze.routes;
+        SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> SUCCESS: routes ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
@@ -106,8 +102,7 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SELECT @rows = COUNT(*)
-        FROM bronze.trailers;
+        SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> SUCCESS: trailers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
@@ -127,8 +122,7 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SELECT @rows = COUNT(*)
-        FROM bronze.trucks;
+        SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> SUCCESS: trucks ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
