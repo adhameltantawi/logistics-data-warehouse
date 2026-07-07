@@ -1,71 +1,76 @@
+CREATE OR ALTER PROCEDURE bronze.load_reference_bronze AS
+BEGIN
+    BEGIN TRY
+        TRUNCATE TABLE bronze.drivers
+        BULK INSERT bronze.drivers
+        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\drivers.csv'
+        WITH
+        (
+            FIRSTROW = 2,
+            FIELDTERMINATOR = ',',
+            ROWTERMINATOR = '0x0A',
+            TABLOCK
+        );
 
+        TRUNCATE TABLE bronze.customers
+        BULK INSERT bronze.customers
+        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\customers.csv'
+        WITH
+        (
+            FIRSTROW = 2,
+            FIELDTERMINATOR = ',',
+            ROWTERMINATOR = '0x0A',
+            TABLOCK
+        );
 
-TRUNCATE TABLE bronze.drivers
-BULK INSERT bronze.drivers
-FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\drivers.csv'
-WITH
-(
-    FIRSTROW = 2,
-    FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '0x0A',
-    TABLOCK
-);
+        TRUNCATE TABLE bronze.facilities
+        BULK INSERT bronze.facilities
+        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\facilities.csv'
+        WITH
+        (
+            FIRSTROW = 2,
+            FIELDTERMINATOR = ',',
+            ROWTERMINATOR = '0x0A',
+            TABLOCK
+        );
 
-TRUNCATE TABLE bronze.customers
-BULK INSERT bronze.customers
-FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\customers.csv'
-WITH
-(
-    FIRSTROW = 2,
-    FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '0x0A',
-    TABLOCK
-);
+        TRUNCATE TABLE bronze.routes
+        BULK INSERT bronze.routes
+        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\routes.csv'
+        WITH
+        (
+            FIRSTROW = 2,
+            FIELDTERMINATOR = ',',
+            ROWTERMINATOR = '0x0A',
+            TABLOCK
+        );
 
-TRUNCATE TABLE bronze.facilities
-BULK INSERT bronze.facilities
-FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\facilities.csv'
-WITH
-(
-    FIRSTROW = 2,
-    FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '0x0A',
-    TABLOCK
-);
+        TRUNCATE TABLE bronze.trailers
+        BULK INSERT bronze.trailers
+        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\trailers.csv'
+        WITH
+        (
+            FIRSTROW = 2,
+            FIELDTERMINATOR = ',',
+            ROWTERMINATOR = '0x0A',
+            TABLOCK
+        );
 
-TRUNCATE TABLE bronze.routes
-BULK INSERT bronze.routes
-FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\routes.csv'
-WITH
-(
-    FIRSTROW = 2,
-    FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '0x0A',
-    TABLOCK
-);
+        TRUNCATE TABLE bronze.trucks
+        BULK INSERT bronze.trucks
+        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\trucks.csv'
+        WITH
+        (
+            FIRSTROW = 2,
+            FIELDTERMINATOR = ',',
+            ROWTERMINATOR = '0x0A',
+            TABLOCK
+        );
+    END TRY
+    BEGIN CATCH
 
-TRUNCATE TABLE bronze.trailers
-BULK INSERT bronze.trailers
-FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\trailers.csv'
-WITH
-(
-    FIRSTROW = 2,
-    FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '0x0A',
-    TABLOCK
-);
-
-TRUNCATE TABLE bronze.trucks
-BULK INSERT bronze.trucks
-FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\trucks.csv'
-WITH
-(
-    FIRSTROW = 2,
-    FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '0x0A',
-    TABLOCK
-);
-
+    END CATCH
+END;
 -- SELECT * FROM bronze.drivers
 -- SELECT * FROM bronze.customers
 -- SELECT * FROM bronze.facilities
