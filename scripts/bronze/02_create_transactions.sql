@@ -12,7 +12,7 @@ CREATE TABLE bronze.delivery_events
     scheduled_datetime TIME NULL,
     actual_datetime TIME NULL,
     detention_minutes INT NULL,
-    on_time_flag TIME NULL,
+    on_time_flag NVARCHAR(5) NULL,
     location_city NVARCHAR(50) NULL,
     location_state NCHAR(2) NULL
 );
@@ -77,5 +77,30 @@ CREATE TABLE bronze.maintenance_records
     facility_location NVARCHAR(20) NULL,
     downtime_hours FLOAT NULL,
     service_description NVARCHAR(50) NULL
+);
+GO
+
+
+IF OBJECT_ID('bronze.safety_incidents', 'U') IS NOT NULL
+    DROP TABLE bronze.safety_incidents;
+GO
+
+CREATE TABLE bronze.safety_incidents
+(
+    incident_id NVARCHAR(20) NULL,
+    trip_id NVARCHAR(20) NULL,
+    truck_id NVARCHAR(20) NULL,
+    driver_id NVARCHAR(20) NULL,
+    incident_date DATETIME2 NULL,
+    incident_type NVARCHAR(50) NULL,
+    location_city NVARCHAR(20) NULL,
+    location_state NCHAR(2) NULL,
+    at_fault_flag NVARCHAR(5) NULL,
+    injury_flag NVARCHAR(5) NULL,
+    vehicle_damage_cost DECIMAL(10,3) NULL,
+    cargo_damage_cost DECIMAL(10,3) NULL,
+    claim_amount DECIMAL(10,3) NULL,
+    preventable_flag NVARCHAR(5) NULL,
+    description NVARCHAR(200) NULL
 );
 GO
