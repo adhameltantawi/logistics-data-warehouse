@@ -15,7 +15,7 @@ Procedure: bronze.load_bronze
 Dependencies:
     Run after:
         - scripts/init_database.sql
-        - scripts/bronze/01_create_reference_tables.sql
+        - scripts/bronze/01_create_reference.sql
         - scripts/bronze/02_create_transactions.sql
         - scripts/bronze/03_create_analytics.sql
         - scripts/bronze/04_load_reference.sql
