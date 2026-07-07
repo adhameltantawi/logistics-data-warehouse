@@ -1,5 +1,5 @@
 IF OBJECT_ID('bronze.delivery_events', 'U') IS NOT NULL
-    DROP TABLE bronze.delivery_events
+    DROP TABLE bronze.delivery_events;
 GO
 
 CREATE TABLE bronze.delivery_events
@@ -15,4 +15,24 @@ CREATE TABLE bronze.delivery_events
     on_time_flag TIME NULL,
     location_city NVARCHAR(50) NULL,
     location_state NCHAR(2) NULL
+);
+GO
+
+IF OBJECT_ID('bronze.fuel_purchases', 'U') IS NOT NULL
+    DROP TABLE bronze.fuel_purchases;
+GO
+
+CREATE TABLE bronze.fuel_purchases
+(
+    fuel_purchase_id NVARCHAR(20) NULL,
+    trip_id NVARCHAR(20) NULL,
+    truck_id NVARCHAR(20) NULL,
+    driver_id NVARCHAR(20) NULL,
+    purchase_date DATETIME2 NULL,
+    location_city NVARCHAR(20) NULL,
+    location_state NCHAR(2) NULL,
+    gallons FLOAT NULL,
+    price_per_gallon DECIMAL(10,3) NULL,
+    total_cost DECIMAL(10,3) NULL,
+    fuel_card_number NVARCHAR(20) NULL
 )
