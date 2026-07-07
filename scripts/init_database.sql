@@ -16,7 +16,7 @@ Schemas:
 Warning:
     Executing this script will permanently delete the existing
     'logistics_dwh' database and all of its contents.
-    
+
 ===============================================================================
 */
 
@@ -36,10 +36,22 @@ GO
 USE logistics_dwh;
 GO
 
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'bronze' )
+    DROP SCHEMA bronze;
+GO
+
 CREATE SCHEMA bronze;
 GO
 
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'silver' )
+    DROP SCHEMA silver;
+GO
+
 CREATE SCHEMA silver;
+GO
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'gold' )
+    DROP SCHEMA gold;
 GO
 
 CREATE SCHEMA gold;
