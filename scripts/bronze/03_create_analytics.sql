@@ -36,7 +36,7 @@ CREATE TABLE bronze.fuel_purchases
      location_state   NCHAR(2) NULL,
      gallons          FLOAT NULL,
      price_per_gallon DECIMAL(10, 3) NULL,
-     total_cost       DECIMAL(10, 3) NULL,
+     total_cost       DECIMAL(18, 3) NULL,
      fuel_card_number NVARCHAR(20) NULL
   );
 
@@ -56,7 +56,7 @@ CREATE TABLE bronze.loads
      load_type           NVARCHAR(20) NULL,
      weight_lbs          INT NULL,
      pieces              INT NULL,
-     revenue             DECIMAL(10, 3) NULL,
+     revenue             DECIMAL(18, 3) NULL,
      fuel_surcharge      DECIMAL(10, 3) NULL,
      accessorial_charges INT NULL,
      load_status         NVARCHAR(20) NULL,
@@ -78,8 +78,8 @@ CREATE TABLE bronze.maintenance_records
      maintenance_type    NVARCHAR(20) NULL,
      odometer_reading    INT NULL,
      labor_hours         FLOAT NULL,
-     labor_cost          DECIMAL(10, 3) NULL,
-     parts_cost          DECIMAL(10, 3) NULL,
+     labor_cost          DECIMAL(18, 3) NULL,
+     parts_cost          DECIMAL(18, 3) NULL,
      total_cost          DECIMAL(10, 3) NULL,
      facility_location   NVARCHAR(20) NULL,
      downtime_hours      FLOAT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE bronze.safety_incidents
      injury_flag         NVARCHAR(5) NULL,
      vehicle_damage_cost DECIMAL(10, 3) NULL,
      cargo_damage_cost   DECIMAL(10, 3) NULL,
-     claim_amount        DECIMAL(10, 3) NULL,
+     claim_amount        DECIMAL(18, 3) NULL,
      preventable_flag    NVARCHAR(5) NULL,
      description         NVARCHAR(200) NULL
   );
