@@ -31,7 +31,7 @@ BEGIN
 END;
 GO
 
--- create database
+-- Create database
 CREATE DATABASE logistics_dwh;
 GO
 
@@ -39,7 +39,7 @@ USE logistics_dwh;
 GO
 
 
--- create schemas
+-- Create schemas
 
 CREATE SCHEMA bronze;
 GO
