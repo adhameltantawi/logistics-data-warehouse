@@ -91,3 +91,22 @@ CREATE TABLE bronze.trailers
 GO
 
 
+IF OBJECT_ID('bronze.trucks', 'U') IS NOT NULL
+    DROP TABLE bronze.trucks;
+GO
+CREATE TABLE bronze.trucks
+(
+    truck_id NVARCHAR(50) NULL,
+    unit_number INT NULL,
+    make NVARCHAR(50) NULL,
+    model_year INT NULL,
+    vin NVARCHAR(50) NULL,
+    acquisition_date DATE NULL,
+    acquisition_mileage INT NULL,
+    fuel_type NVARCHAR(50) NULL,
+    tank_capacity_gallons INT NULL,
+    status NVARCHAR(50) NULL,
+    home_terminal NVARCHAR(50) NULL
+
+);
+GO
