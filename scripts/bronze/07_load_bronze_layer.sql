@@ -12,12 +12,12 @@ BEGIN
         EXEC bronze.load_analytics_bronze;
 
     SET @batch_end_time = SYSDATETIME();
-        PRINT '================================================';
-        PRINT 'Loading Bronze Layer is Completed';
+        PRINT '===========================================================';
+        PRINT 'Bronze Layer Load Completed Successfully';
         PRINT '   - Total Load Duration: ' + CAST(DATEDIFF(SECOND, @batch_start_time, @batch_end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '================================================';
+        PRINT '===========================================================';
 
 END;
 GO
 
-EXEC bronze.load_bronze;
+EXEC bronze.load_bronze; 
