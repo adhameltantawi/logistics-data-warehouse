@@ -1,6 +1,6 @@
 CREATE OR ALTER PROCEDURE bronze.load_reference_bronze AS
 BEGIN
-    DECLARE @start_time DATETIME2, @end_time DATETIME2, @start_batch_time DATETIME2, @end_batch_time DATETIME2
+    DECLARE @start_time DATETIME2, @end_time DATETIME2, @start_batch_time DATETIME2, @end_batch_time DATETIME2, @rows INT
     SET NOCOUNT ON;
     BEGIN TRY
         SET @start_batch_time = SYSDATETIME();
@@ -23,8 +23,9 @@ BEGIN
             TABLOCK
         );
         SET @end_time = SYSDATETIME();
+        SET @rows = @@ROWCOUNT;
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '>> ✔ drivers ............ '+  CAST(@@ROWCOUNT AS NVARCHAR(20)) + ' rows';
+        PRINT '>> ✔[SUCCESS] drivers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
 
 
         SET @start_time = SYSDATETIME();
