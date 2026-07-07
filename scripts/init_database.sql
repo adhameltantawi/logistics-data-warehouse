@@ -31,6 +31,7 @@ BEGIN
 END;
 GO
 
+-- create database
 CREATE DATABASE logistics_dwh;
 GO
 
@@ -38,23 +39,12 @@ USE logistics_dwh;
 GO
 
 
--- Recreate Bronze schemas
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'bronze' )
-    DROP SCHEMA bronze;
-GO
+-- create schemas
 
 CREATE SCHEMA bronze;
 GO
 
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'silver' )
-    DROP SCHEMA silver;
-GO
-
 CREATE SCHEMA silver;
-GO
-
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'gold' )
-    DROP SCHEMA gold;
 GO
 
 CREATE SCHEMA gold;
