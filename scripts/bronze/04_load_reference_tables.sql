@@ -22,10 +22,11 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
+        SELECT @rows = COUNT(*)
+        FROM bronze.drivers;
         SET @end_time = SYSDATETIME();
-        SET @rows = @@ROWCOUNT;
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '>> ✔[SUCCESS] drivers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
+        PRINT '>> SUCCESS: drivers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
 
 
         SET @start_time = SYSDATETIME();
@@ -42,9 +43,11 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
+        SELECT @rows = COUNT(*)
+        FROM bronze.customers;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '>> -------------';
+        PRINT '>> SUCCESS: customers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
 
 
         SET @start_time = SYSDATETIME();
@@ -61,9 +64,11 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
+        SELECT @rows = COUNT(*)
+        FROM bronze.facilities;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '>> -------------';
+        PRINT '>> SUCCESS: facilities ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
 
 
         SET @start_time = SYSDATETIME();
@@ -80,9 +85,11 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
+        SELECT @rows = COUNT(*)
+        FROM bronze.routes;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '>> -------------';
+        PRINT '>> SUCCESS: routes ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
 
 
         SET @start_time = SYSDATETIME();
@@ -99,9 +106,11 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
+        SELECT @rows = COUNT(*)
+        FROM bronze.trailers;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '>> -------------';
+        PRINT '>> SUCCESS: trailers ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
 
 
         SET @start_time = SYSDATETIME();
@@ -118,9 +127,13 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
+        SELECT @rows = COUNT(*)
+        FROM bronze.trucks;
         SET @end_time = SYSDATETIME();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '>> -------------';
+        PRINT '>> SUCCESS: trucks ............ '+  CAST(@rows AS NVARCHAR(20)) + ' rows';
+
+
         SET @end_batch_time = SYSDATETIME();
         PRINT '========================================================';
         PRINT 'Reference Data Load Completed Successfully';
