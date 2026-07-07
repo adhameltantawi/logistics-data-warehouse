@@ -35,3 +35,24 @@ CREATE TABLE bronze.customers
     annual_revenue_potential INT NULL
 );
 GO
+
+
+
+IF OBJECT_ID('bronze.facilities', 'U') IS NOT NULL
+    DROP TABLE bronze.facilities;
+GO
+
+CREATE TABLE bronze.facilities
+(
+    facility_id NVARCHAR(50) NULL,
+    facility_name NVARCHAR(50) NULL,
+    facility_type NVARCHAR(50) NULL,
+    city NVARCHAR(50) NULL,
+    state NCHAR(2) NULL,
+    latitude FLOAT NULL,
+    longitude FLOAT NULL,
+    dock_doors INT NULL,
+    operating_hours NVARCHAR(50) NULL
+);
+GO
+
