@@ -1,7 +1,6 @@
 IF OBJECT_ID('bronze.drivers', 'U') IS NOT NULL
     DROP TABLE bronze.drivers;
 GO
-
 CREATE TABLE bronze.drivers 
 (
     driver_id NVARCHAR(15) NULL, -- Format: DRV00001, allows future growth
@@ -19,10 +18,10 @@ CREATE TABLE bronze.drivers
 );
 GO
 
+
 IF OBJECT_ID('bronze.customers', 'U') IS NOT NULL
     DROP TABLE bronze.customers;
 GO
-
 CREATE TABLE bronze.customers
 (
     customer_id NVARCHAR(15) NULL,
@@ -37,11 +36,9 @@ CREATE TABLE bronze.customers
 GO
 
 
-
 IF OBJECT_ID('bronze.facilities', 'U') IS NOT NULL
     DROP TABLE bronze.facilities;
 GO
-
 CREATE TABLE bronze.facilities
 (
     facility_id NVARCHAR(50) NULL,
@@ -55,4 +52,24 @@ CREATE TABLE bronze.facilities
     operating_hours NVARCHAR(50) NULL
 );
 GO
+
+
+IF OBJECT_ID('bronze.routes', 'U') IS NOT NULL
+    DROP TABLE bronze.routes;
+GO
+CREATE TABLE bronze.routes
+(
+    route_id NVARCHAR(50) NULL,
+    origin_city NVARCHAR(50) NULL,
+    origin_state NCHAR(2),
+    destination_city NVARCHAR(50) NULL,
+    destination_state NCHAR(2),
+    typical_distance_miles INT NULL,
+    base_rate_per_mile FLOAT NULL,
+    fuel_surcharge_rate FLOAT NULL,
+    typical_transit_days INT NULL
+);
+GO
+
+
 
