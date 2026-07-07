@@ -23,6 +23,7 @@ Warning:
 USE master;
 GO
 
+-- Recreate the database if it already exists
 IF DB_ID('logistics_dwh') IS NOT NULL
 BEGIN
     ALTER DATABASE logistics_dwh SET SINGLE_USER WITH ROLLBACK IMMEDIATE; 
@@ -36,6 +37,8 @@ GO
 USE logistics_dwh;
 GO
 
+
+-- Recreate Bronze schemas
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'bronze' )
     DROP SCHEMA bronze;
 GO
