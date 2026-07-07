@@ -3,7 +3,7 @@ IF OBJECT_ID('bronze.drivers', 'U') IS NOT NULL
 GO
 CREATE TABLE bronze.drivers 
 (
-    driver_id NVARCHAR(15) NULL, -- Format: DRV00001, allows future growth
+    driver_id NVARCHAR(50) NULL,
     first_name NVARCHAR(50) NULL, 
     last_name NVARCHAR(50) NULL,
     hire_date DATE NULL,
@@ -24,7 +24,7 @@ IF OBJECT_ID('bronze.customers', 'U') IS NOT NULL
 GO
 CREATE TABLE bronze.customers
 (
-    customer_id NVARCHAR(15) NULL,
+    customer_id NVARCHAR(50) NULL,
     customer_name NVARCHAR(50) NULL,
     customer_type NVARCHAR(50) NULL,
     credit_terms_days INT NULL,
@@ -107,6 +107,5 @@ CREATE TABLE bronze.trucks
     tank_capacity_gallons INT NULL,
     status NVARCHAR(50) NULL,
     home_terminal NVARCHAR(50) NULL
-
 );
 GO
