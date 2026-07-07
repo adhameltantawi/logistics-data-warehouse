@@ -4,9 +4,9 @@ BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
         SET @start_batch_time = SYSDATETIME();
-        PRINT '========================================================';
+        PRINT '-----------------------------------------------------------';
         PRINT 'Loading Transactions csv files into bronze layer';
-        PRINT '========================================================';
+        PRINT '-----------------------------------------------------------';
 
         SET @start_time = SYSDATETIME();
         PRINT '>> Truncating Table: bronze.delivery_events';
@@ -129,20 +129,21 @@ BEGIN
 
 
         SET @end_batch_time = SYSDATETIME();
-        PRINT '========================================================';
+        PRINT '-----------------------------------------------------------';
         PRINT 'Transactions Data Load Completed Successfully';
         PRINT '   - Total Load Duration: ' + CAST(DATEDIFF(SECOND, @start_batch_time, @end_batch_time) AS NVARCHAR(50)) + ' seconds';
-        PRINT '========================================================';
+        PRINT '-----------------------------------------------------------';
+        PRINT '';
 
 
     END TRY
     BEGIN CATCH
-        PRINT '========================================================';
+        PRINT '-----------------------------------------------------------';
         PRINT 'ERROR OCCURRED DURING LOADING TRANSACTIONS IN BRONZE LAYER';
         PRINT 'Error Message: ' + ERROR_MESSAGE() ;
         PRINT 'Error Number: ' + CAST(ERROR_NUMBER() AS NVARCHAR(10));
         PRINT 'Error State: ' + CAST(ERROR_STATE() AS NVARCHAR(10));
-        PRINT '========================================================';
+        PRINT '-----------------------------------------------------------';
     END CATCH
 END;
 GO
