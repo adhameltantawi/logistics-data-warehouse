@@ -35,4 +35,26 @@ CREATE TABLE bronze.fuel_purchases
     price_per_gallon DECIMAL(10,3) NULL,
     total_cost DECIMAL(10,3) NULL,
     fuel_card_number NVARCHAR(20) NULL
-)
+);
+GO
+
+IF OBJECT_ID('bronze.loads', 'U') IS NOT NULL
+    DROP TABLE bronze.loads;
+GO
+
+CREATE TABLE bronze.loads
+(
+    load_id NVARCHAR(20) NULL,
+    customer_id NVARCHAR(20) NULL,
+    route_id NVARCHAR(20) NULL,
+    load_date DATE NULL,
+    load_type NVARCHAR(20) NULL,
+    weight_lbs INT NULL,
+    pieces INT NULL,
+    revenue DECIMAL(10,3) NULL,
+    fuel_surcharge DECIMAL(10,3) NULL,
+    accessorial_charges INT NULL,
+    load_status NVARCHAR(20) NULL,
+    booking_type NVARCHAR(20) NULL
+);
+GO
