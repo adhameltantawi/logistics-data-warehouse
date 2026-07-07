@@ -58,7 +58,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: driver_monthly_metrics ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -80,7 +80,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: truck_utilization_metrics ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         SET @end_batch_time = SYSDATETIME();

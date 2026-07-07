@@ -18,7 +18,7 @@ Tables Loaded:
 
 Dependencies:
     Run after: scripts/init_database.sql
-    Run after: scripts/bronze/01_create_reference_tables.sql
+    Run after: scripts/bronze/01_create_reference.sql
 
 Execution:
     This procedure is registered here but NOT executed automatically.
@@ -62,7 +62,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: drivers ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -84,7 +84,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: customers ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -106,7 +106,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: facilities ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -128,7 +128,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: routes ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -150,7 +150,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: trailers ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -172,7 +172,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: trucks ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         SET @end_batch_time = SYSDATETIME();

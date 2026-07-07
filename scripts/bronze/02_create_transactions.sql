@@ -20,7 +20,7 @@ Note:
 
 Dependencies:
     Run after: scripts/init_database.sql
-    Run after: scripts/bronze/01_create_reference_tables.sql
+    Run after: scripts/bronze/01_create_reference_tables.sql  
 
 Warning:
     This script drops and recreates the listed tables.

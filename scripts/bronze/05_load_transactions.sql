@@ -62,7 +62,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: delivery_events ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -84,7 +84,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: fuel_purchases ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -106,7 +106,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: loads ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -128,7 +128,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: maintenance_records ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -150,7 +150,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: safety_incidents ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         -- -------------------------------------------------------
@@ -172,7 +172,7 @@ BEGIN
         );
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(MILLISECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' ms';
         PRINT '>> SUCCESS: trips ............ ' + CAST(@rows AS NVARCHAR(20)) + ' rows';
 
         SET @end_batch_time = SYSDATETIME();
