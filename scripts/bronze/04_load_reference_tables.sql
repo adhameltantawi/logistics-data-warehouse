@@ -3,12 +3,12 @@ BEGIN
     DECLARE @start_time DATETIME2, @end_time DATETIME2, @start_batch_time DATETIME2, @end_batch_time DATETIME2
 
     BEGIN TRY
-        SET @start_batch_time = GETDATE();
+        SET @start_batch_time = SYSDATETIME();
         PRINT '========================================================';
         PRINT 'Loading Reference csv files into bronze layer';
         PRINT '========================================================';
 
-        SET @start_time = GETDATE();
+        SET @start_time = SYSDATETIME();
         PRINT '>> Truncating Table: bronze.drivers';
         TRUNCATE TABLE bronze.drivers
 
@@ -22,12 +22,12 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SET @end_time = GETDATE();
-        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND,@end_time, @start_time) AS NVARCHAR(50)) + ' seconds';
+        SET @end_time = SYSDATETIME();
+        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> -------------';
 
 
-        SET @start_time = GETDATE();
+        SET @start_time = SYSDATETIME();
         PRINT '>> Truncating Table: bronze.customers';
         TRUNCATE TABLE bronze.customers
 
@@ -41,12 +41,12 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SET @end_time = GETDATE();
-        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND,@end_time, @start_time) AS NVARCHAR(50)) + ' seconds';
+        SET @end_time = SYSDATETIME();
+        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> -------------';
 
 
-        SET @start_time = GETDATE();
+        SET @start_time = SYSDATETIME();
         PRINT '>> Truncating Table: bronze.facilities';
         TRUNCATE TABLE bronze.facilities
 
@@ -60,12 +60,12 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SET @end_time = GETDATE();
-        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND,@end_time, @start_time) AS NVARCHAR(50)) + ' seconds';
+        SET @end_time = SYSDATETIME();
+        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> -------------';
 
 
-        SET @start_time = GETDATE();
+        SET @start_time = SYSDATETIME();
         PRINT '>> Truncating Table: bronze.routes';
         TRUNCATE TABLE bronze.routes
 
@@ -79,12 +79,12 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SET @end_time = GETDATE();
-        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND,@end_time, @start_time) AS NVARCHAR(50)) + ' seconds';
+        SET @end_time = SYSDATETIME();
+        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> -------------';
 
 
-        SET @start_time = GETDATE();
+        SET @start_time = SYSDATETIME();
         PRINT '>> Truncating Table: bronze.trailers';
         TRUNCATE TABLE bronze.trailers
 
@@ -98,12 +98,12 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SET @end_time = GETDATE();
-        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND,@end_time, @start_time) AS NVARCHAR(50)) + ' seconds';
+        SET @end_time = SYSDATETIME();
+        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> -------------';
 
 
-        SET @start_time = GETDATE();
+        SET @start_time = SYSDATETIME();
         PRINT '>> Truncating Table: bronze.trucks';
         TRUNCATE TABLE bronze.trucks
 
@@ -117,13 +117,13 @@ BEGIN
             ROWTERMINATOR = '0x0A',
             TABLOCK
         );
-        SET @end_time = GETDATE();
-        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND,@end_time, @start_time) AS NVARCHAR(50)) + ' seconds';
+        SET @end_time = SYSDATETIME();
+        PRINT 'Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '>> -------------';
-        SET @end_batch_time = GETDATE();
+        SET @end_batch_time = SYSDATETIME();
         PRINT '========================================================';
-        PRINT 'Loading Reference is Completed';
-        PRINT '   - Total Load Duration: ' + CAST(DATEDIFF(SECOND, @end_batch_time, @start_batch_time) AS NVARCHAR(50)) + ' seconds';
+        PRINT 'Reference Data Load Completed Successfully';
+        PRINT '   - Total Load Duration: ' + CAST(DATEDIFF(SECOND, @start_batch_time, @end_batch_time) AS NVARCHAR(50)) + ' seconds';
         PRINT '========================================================';
 
 
