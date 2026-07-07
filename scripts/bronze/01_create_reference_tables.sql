@@ -7,7 +7,7 @@ GO
 -- Store raw driver data
 CREATE TABLE bronze.drivers
   (
-     driver_id         NVARCHAR(15) NULL,
+     driver_id         NVARCHAR(20) NULL,
      first_name        NVARCHAR(50) NULL,
      last_name         NVARCHAR(50) NULL,
      hire_date         DATE NULL,
@@ -30,7 +30,7 @@ GO
 
 CREATE TABLE bronze.customers
   (
-     customer_id              NVARCHAR(15) NULL,
+     customer_id              NVARCHAR(20) NULL,
      customer_name            NVARCHAR(100) NULL,
      customer_type            NVARCHAR(50) NULL,
      credit_terms_days        INT NULL,
@@ -49,7 +49,7 @@ GO
 
 CREATE TABLE bronze.facilities
   (
-     facility_id     NVARCHAR(15) NULL,
+     facility_id     NVARCHAR(20) NULL,
      facility_name   NVARCHAR(100) NULL,
      facility_type   NVARCHAR(50) NULL,
      city            NVARCHAR(50) NULL,
@@ -69,7 +69,7 @@ GO
 
 CREATE TABLE bronze.routes
   (
-     route_id               NVARCHAR(15) NULL,
+     route_id               NVARCHAR(20) NULL,
      origin_city            NVARCHAR(50) NULL,
      origin_state           NCHAR(2) NULL,
      destination_city       NVARCHAR(50) NULL,
@@ -89,7 +89,7 @@ GO
 
 CREATE TABLE bronze.trailers
   (
-     trailer_id       NVARCHAR(15) NULL,
+     trailer_id       NVARCHAR(20) NULL,
      trailer_number   INT NULL,
      trailer_type     NVARCHAR(50) NULL,
      length_feet      INT NULL,
@@ -109,7 +109,7 @@ GO
 
 CREATE TABLE bronze.trucks
   (
-     truck_id              NVARCHAR(15) NULL,
+     truck_id              NVARCHAR(20) NULL,
      unit_number           INT NULL,
      make                  NVARCHAR(50) NULL,
      model_year            INT NULL,
