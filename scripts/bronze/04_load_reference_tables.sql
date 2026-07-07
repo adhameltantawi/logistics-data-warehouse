@@ -2,7 +2,6 @@ CREATE OR ALTER PROCEDURE bronze.load_reference_bronze AS
 BEGIN
     DECLARE @start_time DATETIME2, @end_time DATETIME2, @start_batch_time DATETIME2, @end_batch_time DATETIME2
 
-
     BEGIN TRY
         SET @start_batch_time = GETDATE();
         PRINT '========================================================';
@@ -138,7 +137,7 @@ BEGIN
         PRINT '========================================================';
     END CATCH
 END;
-
+GO
 EXEC bronze.load_reference_bronze
 
 
