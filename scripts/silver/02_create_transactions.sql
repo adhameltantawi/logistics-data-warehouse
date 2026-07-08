@@ -1,18 +1,18 @@
 /*
 ===============================================================================
-Bronze Layer -- Create Transaction Tables
+Silver Layer -- Create Transaction Tables
 ===============================================================================
 Script Purpose:
-    Creates the operational transaction staging tables in the Bronze schema.
+    Creates the operational transaction staging tables in the Silver schema.
     These tables store raw transactional data loaded directly from source CSVs.
 
 Tables Created:
-    - bronze.delivery_events
-    - bronze.fuel_purchases
-    - bronze.loads
-    - bronze.maintenance_records
-    - bronze.safety_incidents
-    - bronze.trips
+    - silver.delivery_events
+    - silver.fuel_purchases
+    - silver.loads
+    - silver.maintenance_records
+    - silver.safety_incidents
+    - silver.trips
 
 Note:
     All columns are defined as NULLable to accommodate raw, unvalidated
@@ -20,7 +20,7 @@ Note:
 
 Dependencies:
     Run after: scripts/init_database.sql
-    Run after: scripts/bronze/01_create_reference.sql
+    Run after: scripts/silver/01_create_reference.sql
 
 Warning:
     This script drops and recreates the listed tables.
@@ -29,14 +29,14 @@ Warning:
 */
 
 -- ============================================================
--- bronze.delivery_events
+-- silver.delivery_events
 -- ============================================================
-IF OBJECT_ID('bronze.delivery_events', 'U') IS NOT NULL
-  DROP TABLE bronze.delivery_events;
+IF OBJECT_ID('silver.delivery_events', 'U') IS NOT NULL
+  DROP TABLE silver.delivery_events;
 
 GO
 
-CREATE TABLE bronze.delivery_events
+CREATE TABLE silver.delivery_events
   (
      event_id           NVARCHAR(20) NULL,
      load_id            NVARCHAR(20) NULL,
@@ -54,14 +54,14 @@ CREATE TABLE bronze.delivery_events
 GO
 
 -- ============================================================
--- bronze.fuel_purchases
+-- silver.fuel_purchases
 -- ============================================================
-IF OBJECT_ID('bronze.fuel_purchases', 'U') IS NOT NULL
-  DROP TABLE bronze.fuel_purchases;
+IF OBJECT_ID('silver.fuel_purchases', 'U') IS NOT NULL
+  DROP TABLE silver.fuel_purchases;
 
 GO
 
-CREATE TABLE bronze.fuel_purchases
+CREATE TABLE silver.fuel_purchases
   (
      fuel_purchase_id NVARCHAR(20)   NULL,
      trip_id          NVARCHAR(20)   NULL,
@@ -79,14 +79,14 @@ CREATE TABLE bronze.fuel_purchases
 GO
 
 -- ============================================================
--- bronze.loads
+-- silver.loads
 -- ============================================================
-IF OBJECT_ID('bronze.loads', 'U') IS NOT NULL
-  DROP TABLE bronze.loads;
+IF OBJECT_ID('silver.loads', 'U') IS NOT NULL
+  DROP TABLE silver.loads;
 
 GO
 
-CREATE TABLE bronze.loads
+CREATE TABLE silver.loads
   (
      load_id             NVARCHAR(20)   NULL,
      customer_id         NVARCHAR(20)   NULL,
@@ -105,14 +105,14 @@ CREATE TABLE bronze.loads
 GO
 
 -- ============================================================
--- bronze.maintenance_records
+-- silver.maintenance_records
 -- ============================================================
-IF OBJECT_ID('bronze.maintenance_records', 'U') IS NOT NULL
-  DROP TABLE bronze.maintenance_records;
+IF OBJECT_ID('silver.maintenance_records', 'U') IS NOT NULL
+  DROP TABLE silver.maintenance_records;
 
 GO
 
-CREATE TABLE bronze.maintenance_records
+CREATE TABLE silver.maintenance_records
   (
      maintenance_id      NVARCHAR(20)   NULL,
      truck_id            NVARCHAR(20)   NULL,
@@ -131,14 +131,14 @@ CREATE TABLE bronze.maintenance_records
 GO
 
 -- ============================================================
--- bronze.safety_incidents
+-- silver.safety_incidents
 -- ============================================================
-IF OBJECT_ID('bronze.safety_incidents', 'U') IS NOT NULL
-  DROP TABLE bronze.safety_incidents;
+IF OBJECT_ID('silver.safety_incidents', 'U') IS NOT NULL
+  DROP TABLE silver.safety_incidents;
 
 GO
 
-CREATE TABLE bronze.safety_incidents
+CREATE TABLE silver.safety_incidents
   (
      incident_id         NVARCHAR(20)   NULL,
      trip_id             NVARCHAR(20)   NULL,
@@ -160,14 +160,14 @@ CREATE TABLE bronze.safety_incidents
 GO
 
 -- ============================================================
--- bronze.trips
+-- silver.trips
 -- ============================================================
-IF OBJECT_ID('bronze.trips', 'U') IS NOT NULL
-  DROP TABLE bronze.trips;
+IF OBJECT_ID('silver.trips', 'U') IS NOT NULL
+  DROP TABLE silver.trips;
 
 GO
 
-CREATE TABLE bronze.trips
+CREATE TABLE silver.trips
   (
      trip_id               NVARCHAR(20) NULL,
      load_id               NVARCHAR(20) NULL,
