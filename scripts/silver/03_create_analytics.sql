@@ -1,14 +1,14 @@
 /*
 ===============================================================================
-Bronze Layer -- Create Analytics Tables
+Silver Layer -- Create Analytics Tables
 ===============================================================================
 Script Purpose:
-    Creates the pre-aggregated analytics staging tables in the Bronze schema.
+    Creates the pre-aggregated analytics staging tables in the Silver schema.
     These tables store monthly KPI snapshots loaded directly from source CSVs.
 
 Tables Created:
-    - bronze.driver_monthly_metrics
-    - bronze.truck_utilization_metrics
+    - silver.driver_monthly_metrics
+    - silver.truck_utilization_metrics
 
 Note:
     All columns are defined as NULLable to accommodate raw, unvalidated
@@ -24,14 +24,14 @@ Warning:
 */
 
 -- ============================================================
--- bronze.driver_monthly_metrics
+-- silver.driver_monthly_metrics
 -- ============================================================
-IF OBJECT_ID('bronze.driver_monthly_metrics', 'U') IS NOT NULL
-  DROP TABLE bronze.driver_monthly_metrics;
+IF OBJECT_ID('silver.driver_monthly_metrics', 'U') IS NOT NULL
+  DROP TABLE silver.driver_monthly_metrics;
 
 GO
 
-CREATE TABLE bronze.driver_monthly_metrics
+CREATE TABLE silver.driver_monthly_metrics
   (
      driver_id             NVARCHAR(20)   NULL,
      month                 DATE           NULL,
@@ -47,14 +47,14 @@ CREATE TABLE bronze.driver_monthly_metrics
 GO
 
 -- ============================================================
--- bronze.truck_utilization_metrics
+-- silver.truck_utilization_metrics
 -- ============================================================
-IF OBJECT_ID('bronze.truck_utilization_metrics', 'U') IS NOT NULL
-  DROP TABLE bronze.truck_utilization_metrics;
+IF OBJECT_ID('silver.truck_utilization_metrics', 'U') IS NOT NULL
+  DROP TABLE silver.truck_utilization_metrics;
 
 GO
 
-CREATE TABLE bronze.truck_utilization_metrics
+CREATE TABLE silver.truck_utilization_metrics
   (
      truck_id           NVARCHAR(20)   NULL,
      month              DATE           NULL,
