@@ -1,18 +1,18 @@
 /*
 ===============================================================================
-Silver Layer -- Create Reference Tables
+Bronze Layer -- Create Reference Tables
 ===============================================================================
 Script Purpose:
-    Creates the dimension/reference staging tables in the Silver schema.
+    Creates the dimension/reference staging tables in the Bronze schema.
     These tables store raw master data loaded directly from source CSVs.
 
 Tables Created:
-    - silver.drivers
-    - silver.customers
-    - silver.facilities
-    - silver.routes
-    - silver.trailers
-    - silver.trucks
+    - bronze.drivers
+    - bronze.customers
+    - bronze.facilities
+    - bronze.routes
+    - bronze.trailers
+    - bronze.trucks
 
 Note:
     All columns are defined as NULLable to accommodate raw, unvalidated
@@ -28,14 +28,14 @@ Warning:
 */
 
 -- ============================================================
--- silver.drivers
+-- bronze.drivers
 -- ============================================================
-IF OBJECT_ID('silver.drivers', 'U') IS NOT NULL
-  DROP TABLE silver.drivers;
+IF OBJECT_ID('bronze.drivers', 'U') IS NOT NULL
+  DROP TABLE bronze.drivers;
 
 GO
 
-CREATE TABLE silver.drivers
+CREATE TABLE bronze.drivers
   (
      driver_id         NVARCHAR(20) NULL,
      first_name        NVARCHAR(50) NULL,
@@ -54,14 +54,14 @@ CREATE TABLE silver.drivers
 GO
 
 -- ============================================================
--- silver.customers
+-- bronze.customers
 -- ============================================================
-IF OBJECT_ID('silver.customers', 'U') IS NOT NULL
-  DROP TABLE silver.customers;
+IF OBJECT_ID('bronze.customers', 'U') IS NOT NULL
+  DROP TABLE bronze.customers;
 
 GO
 
-CREATE TABLE silver.customers
+CREATE TABLE bronze.customerss
   (
      customer_id              NVARCHAR(20)  NULL,
      customer_name            NVARCHAR(100) NULL,
@@ -76,14 +76,14 @@ CREATE TABLE silver.customers
 GO
 
 -- ============================================================
--- silver.facilities
+-- bronze.facilities
 -- ============================================================
-IF OBJECT_ID('silver.facilities', 'U') IS NOT NULL
-  DROP TABLE silver.facilities;
+IF OBJECT_ID('bronze.facilities', 'U') IS NOT NULL
+  DROP TABLE bronze.facilities;
 
 GO
 
-CREATE TABLE silver.facilities
+CREATE TABLE bronze.facilities
   (
      facility_id     NVARCHAR(20)  NULL,
      facility_name   NVARCHAR(100) NULL,
@@ -99,14 +99,14 @@ CREATE TABLE silver.facilities
 GO
 
 -- ============================================================
--- silver.routes
+-- bronze.routes
 -- ============================================================
-IF OBJECT_ID('silver.routes', 'U') IS NOT NULL
-  DROP TABLE silver.routes;
+IF OBJECT_ID('bronze.routes', 'U') IS NOT NULL
+  DROP TABLE bronze.routes;
 
 GO
 
-CREATE TABLE silver.routes
+CREATE TABLE bronze.routes
   (
      route_id               NVARCHAR(20)  NULL,
      origin_city            NVARCHAR(50)  NULL,
@@ -122,14 +122,14 @@ CREATE TABLE silver.routes
 GO
 
 -- ============================================================
--- silver.trailers
+-- bronze.trailers
 -- ============================================================
-IF OBJECT_ID('silver.trailers', 'U') IS NOT NULL
-  DROP TABLE silver.trailers;
+IF OBJECT_ID('bronze.trailers', 'U') IS NOT NULL
+  DROP TABLE bronze.trailers;
 
 GO
 
-CREATE TABLE silver.trailers
+CREATE TABLE bronze.trailers
   (
      trailer_id       NVARCHAR(20) NULL,
      trailer_number   INT          NULL,
@@ -145,14 +145,14 @@ CREATE TABLE silver.trailers
 GO
 
 -- ============================================================
--- silver.trucks
+-- bronze.trucks
 -- ============================================================
-IF OBJECT_ID('silver.trucks', 'U') IS NOT NULL
-  DROP TABLE silver.trucks;
+IF OBJECT_ID('bronze.trucks', 'U') IS NOT NULL
+  DROP TABLE bronze.trucks;
 
 GO
 
-CREATE TABLE silver.trucks
+CREATE TABLE bronze.trucks
   (
      truck_id              NVARCHAR(20) NULL,
      unit_number           INT          NULL,
