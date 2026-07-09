@@ -29,10 +29,17 @@ SELECT last_name
 FROM bronze.drivers
 WHERE last_name != TRIM(last_name) OR last_name IS NULL OR last_name = '';
 
+
 SELECT hire_date, termination_date
 FROM bronze.drivers
-WHERE hire_date IS NULL OR termination_date <= hire_date
+WHERE hire_date IS NULL OR termination_date <= hire_date;
+
 
 SELECT license_number
 FROM bronze.drivers
-WHERE LEN(license_number) != 11 OR license_number IS NULL
+WHERE LEN(license_number) != 11 OR license_number IS NULL OR license_number = '' OR license_number != TRIM(license_number);
+
+SELECT license_state
+FROM bronze.drivers
+WHERE license_state != TRIM(license_state) OR license_state IS NULL OR license_state = '';
+
