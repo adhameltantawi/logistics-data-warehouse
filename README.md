@@ -20,6 +20,7 @@
 
 - [Business Context](#-business-context)
 - [Solution Architecture](#-solution-architecture)
+- [Entity Relationships](#-entity-relationships)
 - [Data Flow](#-data-flow)
 - [Data Sources](#-data-sources)
 - [Project Structure](#-project-structure)
@@ -79,6 +80,14 @@ The warehouse follows the **Medallion Architecture** (Bronze → Silver → Gold
 │  Dimension tables  │  Fact tables  │  KPIs & analytical views        │
 └──────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 🔗 Entity Relationships
+
+The diagram below maps the foreign-key relationships across the 14 source tables — showing how drivers, trucks, loads, trips, and customers interconnect.
+
+![Entity Relationships](docs/entity_relationships.png)
 
 ---
 
