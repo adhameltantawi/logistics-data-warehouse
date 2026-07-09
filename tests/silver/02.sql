@@ -19,3 +19,8 @@ SELECT
 FROM bronze.drivers
 GROUP BY driver_id
 HAVING COUNT(*) > 1
+
+
+SELECT first_name
+FROM bronze.drivers
+WHERE first_name != TRIM(first_name)
