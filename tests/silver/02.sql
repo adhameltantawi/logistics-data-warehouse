@@ -53,4 +53,6 @@ WHERE date_of_birth IS NULL;
 SELECT DISTINCT home_terminal 
 FROM bronze.drivers;
 
+SELECT DISTINCT employment_status
+FROM bronze.drivers;
 
