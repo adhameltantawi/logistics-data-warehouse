@@ -24,3 +24,7 @@ HAVING COUNT(*) > 1
 SELECT first_name
 FROM bronze.drivers
 WHERE first_name != TRIM(first_name)
+
+SELECT last_name
+FROM bronze.drivers
+WHERE last_name != TRIM(last_name)
