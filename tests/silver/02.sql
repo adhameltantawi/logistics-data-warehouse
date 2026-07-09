@@ -12,3 +12,10 @@ SELECT
     cdl_class,
     years_experience
 FROM bronze.drivers
+
+SELECT
+    driver_id,
+    COUNT(*)
+FROM bronze.drivers
+GROUP BY driver_id
+HAVING COUNT(*) > 1
