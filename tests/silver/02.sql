@@ -29,4 +29,6 @@ SELECT last_name
 FROM bronze.drivers
 WHERE last_name != TRIM(last_name) OR last_name IS NULL OR last_name = '';
 
-
+SELECT hire_date, termination_date
+FROM bronze.drivers
+WHERE hire_date IS NULL OR termination_date <= hire_date
