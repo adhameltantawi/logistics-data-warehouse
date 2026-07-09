@@ -39,7 +39,13 @@ SELECT license_number
 FROM bronze.drivers
 WHERE LEN(license_number) != 11 OR license_number IS NULL OR license_number = '' OR license_number != TRIM(license_number);
 
+
 SELECT license_state
 FROM bronze.drivers
 WHERE license_state != TRIM(license_state) OR license_state IS NULL OR license_state = '';
 
+
+
+SELECT date_of_birth
+FROM bronze.drivers
+WHERE date_of_birth IS NULL
