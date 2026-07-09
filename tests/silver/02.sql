@@ -56,3 +56,9 @@ FROM bronze.drivers;
 SELECT DISTINCT employment_status
 FROM bronze.drivers;
 
+SELECT DISTINCT cdl_class
+FROM bronze.drivers;
+
+SELECT years_experience
+FROM bronze.drivers
+WHERE years_experience <= 0;
