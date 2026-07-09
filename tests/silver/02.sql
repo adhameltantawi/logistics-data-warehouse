@@ -18,13 +18,15 @@ SELECT
     COUNT(*)
 FROM bronze.drivers
 GROUP BY driver_id
-HAVING COUNT(*) > 1
+HAVING COUNT(*) > 1 OR driver_id IS NULL
 
 
 SELECT first_name
 FROM bronze.drivers
-WHERE first_name != TRIM(first_name)
+WHERE first_name != TRIM(first_name) OR first_name IS NULL
 
 SELECT last_name
 FROM bronze.drivers
-WHERE last_name != TRIM(last_name)
+WHERE last_name != TRIM(last_name) OR last_name IS NULL
+
+
