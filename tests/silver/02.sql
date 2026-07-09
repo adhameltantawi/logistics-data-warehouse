@@ -11,22 +11,22 @@ SELECT
     employment_status,
     cdl_class,
     years_experience
-FROM bronze.drivers
+FROM bronze.drivers;
 
 SELECT
     driver_id,
     COUNT(*)
 FROM bronze.drivers
 GROUP BY driver_id
-HAVING COUNT(*) > 1 OR driver_id IS NULL
+HAVING COUNT(*) > 1 OR driver_id IS NULL; 
 
 
 SELECT first_name
 FROM bronze.drivers
-WHERE first_name != TRIM(first_name) OR first_name IS NULL
+WHERE first_name != TRIM(first_name) OR first_name IS NULL OR first_name = '';
 
 SELECT last_name
 FROM bronze.drivers
-WHERE last_name != TRIM(last_name) OR last_name IS NULL
+WHERE last_name != TRIM(last_name) OR last_name IS NULL OR last_name = '';
 
 
