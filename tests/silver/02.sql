@@ -86,3 +86,8 @@ SELECT
     MAX(years_experience) AS max_year_of_experience
 FROM bronze.drivers;
 
+
+SELECT
+    MIN(hire_date),
+    MAX(hire_date)
+FROM bronze.drivers;
