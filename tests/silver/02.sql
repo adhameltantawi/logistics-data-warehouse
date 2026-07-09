@@ -48,4 +48,9 @@ WHERE license_state != TRIM(license_state) OR license_state IS NULL OR license_s
 
 SELECT date_of_birth
 FROM bronze.drivers
-WHERE date_of_birth IS NULL
+WHERE date_of_birth IS NULL;
+
+SELECT DISTINCT home_terminal 
+FROM bronze.drivers;
+
+
