@@ -18,7 +18,12 @@ SELECT
     COUNT(*)
 FROM bronze.drivers
 GROUP BY driver_id
-HAVING COUNT(*) > 1 OR driver_id IS NULL; 
+HAVING COUNT(*) > 1; 
+
+SELECT
+    driver_id
+FROM bronze.drivers
+WHERE driver_id IS NULL; 
 
 
 SELECT first_name
@@ -34,10 +39,12 @@ SELECT hire_date, termination_date
 FROM bronze.drivers
 WHERE hire_date IS NULL OR termination_date <= hire_date;
 
+SELECT DISTINCT LEN(license_number)
+FROM bronze.drivers;
 
 SELECT license_number
 FROM bronze.drivers
-WHERE LEN(license_number) != 11 OR license_number IS NULL OR license_number = '' OR license_number != TRIM(license_number);
+WHERE license_number IS NULL OR license_number = '' OR license_number != TRIM(license_number);
 
 
 SELECT license_state
@@ -61,4 +68,21 @@ FROM bronze.drivers;
 
 SELECT years_experience
 FROM bronze.drivers
-WHERE years_experience <= 0;
+WHERE years_experience = 0;
+
+
+SELECT
+    COUNT(*) AS total_rows
+FROM bronze.drivers;
+
+
+SELECT
+    MIN(date_of_birth) AS min_birthdate,
+    MAX(date_of_birth) AS max_birthdate
+FROM bronze.drivers;
+
+SELECT
+    MIN(years_experience) AS min_year_of_experience,
+    MAX(years_experience) AS max_year_of_experience
+FROM bronze.drivers;
+
