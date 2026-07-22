@@ -58,3 +58,14 @@ SELECT credit_terms_days
 FROM bronze.customers
 WHERE credit_terms_days IS NULL
    OR credit_terms_days = '';
+
+
+SELECT primary_freight_type
+FROM bronze.customers
+WHERE primary_freight_type != TRIM(primary_freight_type)
+   OR primary_freight_type IS NULL
+   OR primary_freight_type = ''; 
+
+
+SELECT DISTINCT primary_freight_type
+FROM bronze.customers;
