@@ -69,3 +69,14 @@ WHERE primary_freight_type != TRIM(primary_freight_type)
 
 SELECT DISTINCT primary_freight_type
 FROM bronze.customers;
+
+
+SELECT account_status
+FROM bronze.customers
+WHERE account_status != TRIM(account_status)
+   OR account_status IS NULL
+   OR account_status = '';
+
+
+SELECT DISTINCT account_status
+FROM bronze.customers;
