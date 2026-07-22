@@ -107,4 +107,10 @@ FROM bronze.customers;
 SELECT 
     MAX(annual_revenue_potential) AS max_annual_revenue_potential,
     MIN(annual_revenue_potential) AS min_annual_revenue_potential
+FROM bronze.customers;
+
+
+SELECT annual_revenue_potential
 FROM bronze.customers
+WHERE annual_revenue_potential IS NULL
+   OR annual_revenue_potential = '';
