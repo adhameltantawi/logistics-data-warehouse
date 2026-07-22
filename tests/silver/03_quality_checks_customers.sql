@@ -46,16 +46,17 @@ SELECT DISTINCT customer_type
 FROM bronze.customers
 
 
-SELECT 
+SELECT
     customer_type,
     COUNT(*) AS customer_type_count
 FROM bronze.customers
 GROUP BY customer_type
-HAVING COUNT(DISTINCT customer_type) > 1; 
+ORDER BY customer_type_count DESC;
 
 
 SELECT 
     customer_type
 FROM bronze.customers
 WHERE customer_type != TRIM(customer_type)
+
 
