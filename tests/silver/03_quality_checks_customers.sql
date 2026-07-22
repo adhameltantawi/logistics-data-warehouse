@@ -40,3 +40,22 @@ HAVING COUNT(DISTINCT customer_id) > 1;
 SELECT *
 FROM bronze.customers
 WHERE customer_name = 'ABC Corp';
+
+
+SELECT DISTINCT customer_type
+FROM bronze.customers
+
+
+SELECT 
+    customer_type,
+    COUNT(*) AS customer_type_count
+FROM bronze.customers
+GROUP BY customer_type
+HAVING COUNT(DISTINCT customer_type) > 1; 
+
+
+SELECT 
+    customer_type
+FROM bronze.customers
+WHERE customer_type != TRIM(customer_type)
+
