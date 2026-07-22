@@ -101,5 +101,10 @@ WHERE contract_start_date < '2000-01-01';
 SELECT 
     MIN(contract_start_date) AS min_contract_start_date,
     MAX(contract_start_date) AS max_contract_start_date
-FROM bronze.customers
+FROM bronze.customers;
 
+
+SELECT 
+    MAX(annual_revenue_potential) AS max_annual_revenue_potential,
+    MIN(annual_revenue_potential) AS min_annual_revenue_potential
+FROM bronze.customers
