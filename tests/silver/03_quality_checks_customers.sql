@@ -80,3 +80,17 @@ WHERE account_status != TRIM(account_status)
 
 SELECT DISTINCT account_status
 FROM bronze.customers;
+
+
+SELECT contract_start_date
+FROM bronze.customers
+WHERE contract_start_date IS NULL
+   OR contract_start_date = '';
+
+
+
+
+SELECT 
+    MIN(contract_start_date) AS min_contract_start_date,
+    MAX(contract_start_date) AS max_contract_start_date
+FROM bronze.customers
