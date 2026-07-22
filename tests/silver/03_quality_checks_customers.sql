@@ -58,5 +58,7 @@ SELECT
     customer_type
 FROM bronze.customers
 WHERE customer_type != TRIM(customer_type)
+   OR customer_type IS NULL
+   OR customer_type = '';
 
 
