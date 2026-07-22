@@ -56,8 +56,7 @@ WHERE customer_type != TRIM(customer_type)
 
 SELECT credit_terms_days
 FROM bronze.customers
-WHERE credit_terms_days IS NULL
-   OR credit_terms_days = '';
+WHERE credit_terms_days IS NULL;
 
 
 SELECT primary_freight_type
