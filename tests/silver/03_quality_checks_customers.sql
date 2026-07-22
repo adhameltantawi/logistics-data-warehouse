@@ -59,6 +59,11 @@ FROM bronze.customers
 WHERE credit_terms_days IS NULL;
 
 
+SELECT credit_terms_days
+FROM bronze.customers
+WHERE credit_terms_days NOT IN (0,15,30,45,60,90);
+
+
 SELECT primary_freight_type
 FROM bronze.customers
 WHERE primary_freight_type != TRIM(primary_freight_type)
@@ -111,5 +116,4 @@ FROM bronze.customers;
 
 SELECT annual_revenue_potential
 FROM bronze.customers
-WHERE annual_revenue_potential IS NULL
-   OR annual_revenue_potential = '';
+WHERE annual_revenue_potential IS NULL;
