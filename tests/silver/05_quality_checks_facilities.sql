@@ -65,4 +65,25 @@ SELECT
 FROM bronze.facilities
 GROUP BY longitude,
          latitude
+HAVING COUNT(*) > 1
+ORDER BY cnt DESC;
+
+
+SELECT
+    facility_id,
+    facility_name,
+    city,
+    state,
+    latitude,
+    longitude
+FROM bronze.facilities
+WHERE latitude = 25.7617
+  AND longitude = -80.1918;
+
+
+SELECT
+    facility_name,
+    COUNT(*) AS cnt
+FROM bronze.facilities
+GROUP BY facility_name
 HAVING COUNT(*) > 1;
