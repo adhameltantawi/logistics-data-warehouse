@@ -50,3 +50,19 @@ FROM bronze.facilities
 WHERE longitude IS NULL
    OR longitude = ''
    OR longitude NOT BETWEEN -180 AND 180;
+
+
+SELECT * 
+FROM bronze.facilities
+WHERE longitude = 0
+  AND latitude = 0;
+
+
+SELECT 
+   longitude,
+   latitude,
+   COUNT(*) AS cnt
+FROM bronze.facilities
+GROUP BY longitude,
+         latitude
+HAVING COUNT(*) > 1;
