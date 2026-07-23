@@ -14,9 +14,16 @@ WHERE facility_name IS NULL
 
 SELECT facility_type
 FROM bronze.facilities
-WHERE facility_name IS NULL
-   OR facility_name = '';
+WHERE facility_type IS NULL
+   OR facility_type = '';
 
 
 SELECT DISTINCT facility_type
+FROM bronze.facilities;
+
+
+SELECT city
 FROM bronze.facilities
+WHERE city IS NULL
+   OR city = ''
+   OR city != TRIM(city);
