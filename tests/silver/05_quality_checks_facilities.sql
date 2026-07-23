@@ -27,3 +27,11 @@ FROM bronze.facilities
 WHERE city IS NULL
    OR city = ''
    OR city != TRIM(city);
+
+
+SELECT state
+FROM bronze.facilities
+WHERE city IS NULL
+   OR city = ''
+   OR city != TRIM(city)
+   OR LEN(state) != 2;
