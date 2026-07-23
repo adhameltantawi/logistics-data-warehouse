@@ -35,3 +35,18 @@ WHERE city IS NULL
    OR city = ''
    OR city != TRIM(city)
    OR LEN(state) != 2;
+
+
+SELECT latitude
+FROM bronze.facilities
+WHERE latitude IS NULL
+   OR latitude = ''
+   OR latitude NOT BETWEEN -90 AND 90;
+
+
+
+SELECT longitude
+FROM bronze.facilities
+WHERE longitude IS NULL
+   OR longitude = ''
+   OR longitude NOT BETWEEN -180 AND 180;
