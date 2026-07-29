@@ -3,8 +3,9 @@
 Silver Layer -- Create Reference Tables
 ===============================================================================
 Script Purpose:
-    Creates the dimension/reference staging tables in the Silver schema.
-    These tables store raw master data loaded directly from source CSVs.
+    Creates the dimension/reference tables in the Silver schema.
+    These tables store cleansed, standardised, and deduplicated data
+    transformed from the Bronze layer.
 
 Tables Created:
     - silver.drivers
@@ -14,9 +15,8 @@ Tables Created:
     - silver.trailers
     - silver.trucks
 
-Note:
-    All columns are defined as NULLable to accommodate raw, unvalidated
-    source data. Constraints and validation are applied in the Silver layer.
+Audit Column:
+    dwh_create_date — Timestamp of when each record was loaded into Silver.
 
 Dependencies:
     Run after: scripts/init_database.sql
@@ -48,7 +48,8 @@ CREATE TABLE silver.drivers
      home_terminal     NVARCHAR(50) NULL,
      employment_status NVARCHAR(50) NULL,
      cdl_class         NCHAR(1)     NULL,
-     years_experience  INT          NULL
+     years_experience  INT          NULL,
+     dwh_create_date   DATETIME2    DEFAULT SYSDATETIME()
   );
 
 GO
@@ -70,7 +71,8 @@ CREATE TABLE silver.customers
      primary_freight_type     NVARCHAR(50)  NULL,
      account_status           NVARCHAR(50)  NULL,
      contract_start_date      DATE          NULL,
-     annual_revenue_potential INT           NULL
+     annual_revenue_potential INT           NULL,
+     dwh_create_date          DATETIME2     DEFAULT SYSDATETIME()
   );
 
 GO
@@ -93,7 +95,8 @@ CREATE TABLE silver.facilities
      latitude        FLOAT         NULL,
      longitude       FLOAT         NULL,
      dock_doors      INT           NULL,
-     operating_hours NVARCHAR(50)  NULL
+     operating_hours NVARCHAR(50)  NULL,
+     dwh_create_date DATETIME2     DEFAULT SYSDATETIME()
   );
 
 GO
@@ -116,7 +119,8 @@ CREATE TABLE silver.routes
      typical_distance_miles INT           NULL,
      base_rate_per_mile     DECIMAL(10,2) NULL,
      fuel_surcharge_rate    DECIMAL(10,2) NULL,
-     typical_transit_days   INT           NULL
+     typical_transit_days   INT           NULL,
+     dwh_create_date        DATETIME2     DEFAULT SYSDATETIME()
   );
 
 GO
@@ -139,7 +143,8 @@ CREATE TABLE silver.trailers
      vin              NVARCHAR(25) NULL,
      acquisition_date DATE         NULL,
      status           NVARCHAR(50) NULL,
-     current_location NVARCHAR(50) NULL
+     current_location NVARCHAR(50) NULL,
+     dwh_create_date  DATETIME2    DEFAULT SYSDATETIME()
   );
 
 GO
@@ -164,7 +169,8 @@ CREATE TABLE silver.trucks
      fuel_type             NVARCHAR(50) NULL,
      tank_capacity_gallons INT          NULL,
      status                NVARCHAR(50) NULL,
-     home_terminal         NVARCHAR(50) NULL
+     home_terminal         NVARCHAR(50) NULL,
+     dwh_create_date       DATETIME2    DEFAULT SYSDATETIME()
   );
 
 GO

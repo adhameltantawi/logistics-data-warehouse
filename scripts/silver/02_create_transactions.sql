@@ -3,8 +3,9 @@
 Silver Layer -- Create Transaction Tables
 ===============================================================================
 Script Purpose:
-    Creates the operational transaction staging tables in the Silver schema.
-    These tables store raw transactional data loaded directly from source CSVs.
+    Creates the operational transaction tables in the Silver schema.
+    These tables store cleansed, standardised, and deduplicated data
+    transformed from the Bronze layer.
 
 Tables Created:
     - silver.delivery_events
@@ -14,9 +15,8 @@ Tables Created:
     - silver.safety_incidents
     - silver.trips
 
-Note:
-    All columns are defined as NULLable to accommodate raw, unvalidated
-    source data. Constraints and validation are applied in the Silver layer.
+Audit Column:
+    dwh_create_date — Timestamp of when each record was loaded into Silver.
 
 Dependencies:
     Run after: scripts/init_database.sql
@@ -48,7 +48,8 @@ CREATE TABLE silver.delivery_events
      detention_minutes  INT          NULL,
      on_time_flag       NVARCHAR(5)  NULL,
      location_city      NVARCHAR(50) NULL,
-     location_state     NCHAR(2)     NULL
+     location_state     NCHAR(2)     NULL,
+     dwh_create_date    DATETIME2    DEFAULT SYSDATETIME()
   );
 
 GO
@@ -73,7 +74,8 @@ CREATE TABLE silver.fuel_purchases
      gallons          FLOAT          NULL,
      price_per_gallon DECIMAL(10, 3) NULL,
      total_cost       DECIMAL(18, 3) NULL,
-     fuel_card_number NVARCHAR(20)   NULL
+     fuel_card_number NVARCHAR(20)   NULL,
+     dwh_create_date  DATETIME2      DEFAULT SYSDATETIME()
   );
 
 GO
@@ -99,7 +101,8 @@ CREATE TABLE silver.loads
      fuel_surcharge      DECIMAL(18, 3) NULL,
      accessorial_charges INT            NULL,
      load_status         NVARCHAR(20)   NULL,
-     booking_type        NVARCHAR(20)   NULL
+     booking_type        NVARCHAR(20)   NULL,
+     dwh_create_date     DATETIME2      DEFAULT SYSDATETIME()
   );
 
 GO
@@ -125,7 +128,8 @@ CREATE TABLE silver.maintenance_records
      total_cost          DECIMAL(18, 3) NULL,
      facility_location   NVARCHAR(20)   NULL,
      downtime_hours      FLOAT          NULL,
-     service_description NVARCHAR(50)   NULL
+     service_description NVARCHAR(50)   NULL,
+     dwh_create_date     DATETIME2      DEFAULT SYSDATETIME()
   );
 
 GO
@@ -154,7 +158,8 @@ CREATE TABLE silver.safety_incidents
      cargo_damage_cost   DECIMAL(18, 3) NULL,
      claim_amount        DECIMAL(18, 3) NULL,
      preventable_flag    NVARCHAR(5)    NULL,
-     description         NVARCHAR(200)  NULL
+     description         NVARCHAR(200)  NULL,
+     dwh_create_date     DATETIME2      DEFAULT SYSDATETIME()
   );
 
 GO
@@ -180,7 +185,8 @@ CREATE TABLE silver.trips
      fuel_gallons_used     FLOAT        NULL,
      average_mpg           FLOAT        NULL,
      idle_time_hours       FLOAT        NULL,
-     trip_status           NVARCHAR(15) NULL
+     trip_status           NVARCHAR(15) NULL,
+     dwh_create_date       DATETIME2    DEFAULT SYSDATETIME()
   );
 
 GO
