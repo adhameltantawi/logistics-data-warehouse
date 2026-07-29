@@ -22,6 +22,7 @@
 - [Solution Architecture](#-solution-architecture)
 - [Entity Relationships](#-entity-relationships)
 - [Data Flow](#-data-flow)
+- [Star Schema](#-star-schema)
 - [Data Sources](#-data-sources)
 - [Project Structure](#-project-structure)
 - [Pipeline Execution](#-pipeline-execution)
@@ -77,7 +78,7 @@ The warehouse follows the **Medallion Architecture** (Bronze → Silver → Gold
                                ▼
 ┌──────────────────────────────────────────────────────────────────────┐
 │  🥇 GOLD  — Business-Ready Star Schema (Schema: gold)               │
-│  Dimension tables  │  Fact tables  │  KPIs & analytical views        │
+│  Dimension tables  │  Fact tables  │  Surrogate keys  │  KPIs        │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -101,11 +102,71 @@ The diagram below maps the foreign-key relationships across the 14 source tables
        ▼  BULK INSERT (stored proc: bronze.load_bronze)
 [Bronze Tables] ── Raw, untransformed, exact replica of source
        │
-       ▼  ETL stored procedures per table
+       ▼  ETL stored procedures per table (stored proc: silver.load_silver)
 [Silver Tables] ── Cleansed, typed, deduplicated + audit timestamp
        │
-       ▼  Business logic JOINs + surrogate key generation
-[Gold Layer]    ── Star Schema: dimensions + fact tables
+       ▼  Business logic JOINs + surrogate key generation (stored proc: gold.load_gold)
+[Gold Layer]    ── Star Schema: 7 dimensions + 5 fact tables
+```
+
+---
+
+## ⭐ Star Schema
+
+The Gold layer implements a **Star Schema** dimensional model optimised for analytical queries. All dimension tables use **surrogate keys** (INT IDENTITY) for fast joins, while retaining natural keys for traceability.
+
+### Dimension Tables
+
+| Table | Source | Key Columns | Enrichments |
+|---|---|---|---|
+| `gold.dim_driver` | `silver.drivers` | `driver_key` (surrogate), `driver_id` (natural) | `full_name` = first + last |
+| `gold.dim_truck` | `silver.trucks` | `truck_key`, `truck_id` | `truck_age_years` = current year − model year |
+| `gold.dim_trailer` | `silver.trailers` | `trailer_key`, `trailer_id` | — |
+| `gold.dim_customer` | `silver.customers` | `customer_key`, `customer_id` | — |
+| `gold.dim_facility` | `silver.facilities` | `facility_key`, `facility_id` | — |
+| `gold.dim_route` | `silver.routes` | `route_key`, `route_id` | `lane_description` = origin → destination |
+| `gold.dim_date` | Generated (2020–2030) | `date_key` (YYYYMMDD) | year, quarter, month, week, day, is_weekend |
+
+### Fact Tables
+
+| Table | Grain | Dimension Keys | Key Measures |
+|---|---|---|---|
+| `gold.fact_trip` | One trip | driver, truck, trailer, customer, route, date | revenue, total_revenue, distance, duration, fuel, MPG |
+| `gold.fact_fuel_purchase` | One fuel transaction | driver, truck, date | gallons, price_per_gallon, total_cost |
+| `gold.fact_maintenance` | One service record | truck, date | labor_cost, parts_cost, total_cost, downtime_hours |
+| `gold.fact_safety` | One incident | driver, truck, date | vehicle_damage_cost, cargo_damage_cost, total_damage_cost, claim_amount |
+| `gold.fact_delivery` | One pickup/delivery | facility | detention_minutes, on_time_flag |
+
+### Star Schema Relationships
+
+```
+                          ┌──────────────┐
+                          │  dim_date    │
+                          └──────┬───────┘
+                                 │
+    ┌──────────────┐    ┌────────┴────────┐    ┌──────────────┐
+    │  dim_driver   │────│   fact_trip     │────│  dim_route   │
+    └──────────────┘    └────────┬────────┘    └──────────────┘
+                                 │
+    ┌──────────────┐             │              ┌──────────────┐
+    │  dim_truck   │─────────────┤──────────────│  dim_trailer │
+    └──────┬───────┘             │              └──────────────┘
+           │                     │
+           │              ┌──────┴───────┐
+           │              │ dim_customer │
+           │              └──────────────┘
+           │
+    ┌──────┴─────────────┐  ┌────────────────────┐  ┌──────────────────┐
+    │ fact_fuel_purchase  │  │  fact_maintenance   │  │   fact_safety    │
+    └────────────────────┘  └────────────────────┘  └──────────────────┘
+                                                           │
+                                                    ┌──────┴───────┐
+                                                    │ dim_facility │
+                                                    └──────────────┘
+                                                           │
+                                                    ┌──────┴───────┐
+                                                    │fact_delivery │
+                                                    └──────────────┘
 ```
 
 ---
@@ -154,7 +215,7 @@ logistics-data-warehouse/
 ├── 📂 datasets/                         # Source CSV files (not tracked in Git)
 │   ├── reference/                       # Dimension data (drivers, trucks, customers…)
 │   ├── transactions/                    # Operational data (trips, loads, fuel…)
-│   └── analytics/                      # Pre-aggregated monthly KPIs
+│   └── analytics/                       # Pre-aggregated monthly KPIs
 │
 ├── 📂 docs/                             # Technical documentation & diagrams
 │   ├── data_architecture.png            # Medallion architecture overview
@@ -175,17 +236,55 @@ logistics-data-warehouse/
 │   │   ├── 06_load_analytics.sql       # Stored proc — load analytics data
 │   │   └── 07_load_bronze_layer.sql    # Master orchestrator (single entry point)
 │   │
-│   └── silver/                          # 🥈 Silver layer — cleanse & standardise
-│       ├── 01_create_reference.sql     # DDL — silver reference tables
-│       ├── 02_create_transactions.sql  # DDL — silver transaction tables
-│       ├── 03_create_analytics.sql     # DDL — silver analytics tables
-│       └── 04_load_drivers.sql         # Stored proc — load & cleanse drivers
+│   ├── silver/                          # 🥈 Silver layer — cleanse & standardise
+│   │   ├── 01_create_reference.sql     # DDL — silver reference tables + audit col
+│   │   ├── 02_create_transactions.sql  # DDL — silver transaction tables + audit col
+│   │   ├── 03_create_analytics.sql     # DDL — silver analytics tables + audit col
+│   │   ├── 04_load_drivers.sql         # Stored proc — cleanse & load drivers
+│   │   ├── 05_load_customers.sql       # Stored proc — cleanse & load customers
+│   │   ├── 06_load_facilities.sql      # Stored proc — cleanse & load facilities
+│   │   ├── 07_load_routes.sql          # Stored proc — cleanse & load routes
+│   │   ├── 08_load_trailers.sql        # Stored proc — cleanse & load trailers
+│   │   ├── 09_load_trucks.sql          # Stored proc — cleanse & load trucks
+│   │   ├── 10_load_delivery_events.sql # Stored proc — cleanse & load delivery events
+│   │   ├── 11_load_fuel_purchases.sql  # Stored proc — cleanse & load fuel purchases
+│   │   ├── 12_load_loads.sql           # Stored proc — cleanse & load loads
+│   │   ├── 13_load_maintenance_records.sql  # Stored proc — cleanse & load maintenance
+│   │   ├── 14_load_safety_incidents.sql     # Stored proc — cleanse & load safety
+│   │   ├── 15_load_trips.sql           # Stored proc — cleanse & load trips
+│   │   ├── 16_load_driver_monthly_metrics.sql   # Stored proc — load driver metrics
+│   │   ├── 17_load_truck_utilization_metrics.sql # Stored proc — load truck metrics
+│   │   └── 18_load_silver_layer.sql    # Master orchestrator (single entry point)
+│   │
+│   └── gold/                            # 🥇 Gold layer — Star Schema
+│       ├── 01_create_dimensions.sql    # DDL — 7 dimension tables (with surrogate keys)
+│       ├── 02_create_facts.sql         # DDL — 5 fact tables
+│       ├── 03_load_dimensions.sql      # Stored proc — load all dimensions + date dim
+│       ├── 04_load_facts.sql           # Stored proc — load all facts (JOIN dimensions)
+│       └── 05_load_gold_layer.sql      # Master orchestrator (single entry point)
 │
 ├── 📂 tests/                            # Data quality & validation scripts
-│   ├── silver/                          # Silver layer quality checks
+│   ├── silver/                          # Silver layer quality checks (16 scripts)
 │   │   ├── 01_exploration.sql          # Bronze layer profiling & discovery
-│   │   └── 02_quality_checks_drivers.sql  # Drivers table quality checks
-│   └── gold/                            # Gold layer validation scripts
+│   │   ├── 02_quality_checks_drivers.sql
+│   │   ├── 03_quality_checks_customers.sql
+│   │   ├── 04_explore_customer_type.sql
+│   │   ├── 05_quality_checks_facilities.sql
+│   │   ├── 06_quality_checks_routes.sql
+│   │   ├── 07_quality_checks_trailers.sql
+│   │   ├── 08_quality_checks_trucks.sql
+│   │   ├── 09_quality_checks_delivery_events.sql
+│   │   ├── 10_quality_checks_fuel_purchases.sql
+│   │   ├── 11_quality_checks_loads.sql
+│   │   ├── 12_quality_checks_maintenance_records.sql
+│   │   ├── 13_quality_checks_safety_incidents.sql
+│   │   ├── 14_quality_checks_trips.sql
+│   │   ├── 15_quality_checks_driver_monthly_metrics.sql
+│   │   └── 16_quality_checks_truck_utilization_metrics.sql
+│   │
+│   └── gold/                            # Gold layer validation scripts (2 scripts)
+│       ├── 01_quality_checks_dimensions.sql  # Dimension integrity & reconciliation
+│       └── 02_quality_checks_facts.sql       # Fact integrity & referential checks
 │
 └── README.md                            # This file
 ```
@@ -234,47 +333,117 @@ EXEC bronze.load_bronze;
 ### Step 3 — 🥈 Silver Layer (Cleanse & Standardise)
 
 ```sql
--- Create silver table schemas
+-- Create silver table schemas (reference, transactions, analytics)
 :r scripts/silver/01_create_reference.sql
 :r scripts/silver/02_create_transactions.sql
 :r scripts/silver/03_create_analytics.sql
 
--- Run individual table load procedures
+-- Register all 14 table load stored procedures
 :r scripts/silver/04_load_drivers.sql
+:r scripts/silver/05_load_customers.sql
+:r scripts/silver/06_load_facilities.sql
+:r scripts/silver/07_load_routes.sql
+:r scripts/silver/08_load_trailers.sql
+:r scripts/silver/09_load_trucks.sql
+:r scripts/silver/10_load_delivery_events.sql
+:r scripts/silver/11_load_fuel_purchases.sql
+:r scripts/silver/12_load_loads.sql
+:r scripts/silver/13_load_maintenance_records.sql
+:r scripts/silver/14_load_safety_incidents.sql
+:r scripts/silver/15_load_trips.sql
+:r scripts/silver/16_load_driver_monthly_metrics.sql
+:r scripts/silver/17_load_truck_utilization_metrics.sql
+:r scripts/silver/18_load_silver_layer.sql
 ```
 
-**What happens:** Source data is cleansed, type-cast, deduplicated, and enriched with a `dwh_create_date` audit timestamp.
+Then execute the full pipeline with a single command:
 
-> 🚧 **Silver layer is actively in development** — additional table load procedures are being added incrementally.
+```sql
+EXEC silver.load_silver;
+```
+
+**What happens:** Each of the 14 Bronze tables is cleansed and loaded into Silver with:
+- **TRIM** on all string columns
+- **UPPER** standardisation on state codes, VINs, and flags
+- **Deduplication** via `ROW_NUMBER()` on primary keys
+- **Range validation** on numeric fields (negative values → NULL)
+- **`dwh_create_date`** audit timestamp on every record
 
 ---
 
 ### Step 4 — 🥇 Gold Layer (Star Schema)
 
-> 🔜 Coming soon — dimensional model and fact tables built on top of the Silver layer.
+```sql
+-- Create dimension and fact table schemas
+:r scripts/gold/01_create_dimensions.sql
+:r scripts/gold/02_create_facts.sql
+
+-- Register load stored procedures
+:r scripts/gold/03_load_dimensions.sql
+:r scripts/gold/04_load_facts.sql
+:r scripts/gold/05_load_gold_layer.sql
+```
+
+Then execute the full pipeline with a single command:
+
+```sql
+EXEC gold.load_gold;
+```
+
+**What happens:** 7 dimension tables are populated from Silver (including a generated date dimension spanning 2020–2030), then 5 fact tables are loaded by JOINing Silver transactional data with dimension surrogate keys. Derived measures like `total_revenue` and `total_damage_cost` are calculated during load.
+
+---
+
+## 🔄 Full Pipeline (End-to-End)
+
+After all scripts have been registered, the entire warehouse can be refreshed with three commands:
+
+```sql
+EXEC bronze.load_bronze;
+EXEC silver.load_silver;
+EXEC gold.load_gold;
+```
 
 ---
 
 ## 🧪 Testing & Data Quality
 
-Data quality is a **first-class engineering concern** in this project. Every source table has a corresponding validation script before it is promoted to Silver.
+Data quality is a **first-class engineering concern** in this project. Every source table has a corresponding validation script before it is promoted to the next layer.
 
 ### Quality Check Dimensions
 
 | Dimension | Checks Performed |
 |---|---|
 | **Completeness** | NULL checks on mandatory fields (IDs, dates, names) |
-| **Uniqueness** | Duplicate detection on primary keys |
+| **Uniqueness** | Duplicate detection on primary keys (single & composite) |
 | **Validity** | Date logic checks, negative value detection, format validation |
 | **Consistency** | Trimming, standardisation of categorical values |
 | **Range** | Min/max sanity checks on numeric and date columns |
+| **Referential Integrity** | Orphaned foreign key detection (Gold layer) |
+| **Reconciliation** | Silver-to-Gold row count matching |
 
-### Current Test Coverage
+### Test Coverage
 
-| Script | Table Covered |
-|---|---|
-| `tests/silver/01_exploration.sql` | Bronze layer — overall profiling |
-| `tests/silver/02_quality_checks_drivers.sql` | `bronze.drivers` |
+| Layer | Script | Table Covered |
+|---|---|---|
+| Silver | `01_exploration.sql` | Bronze layer — overall profiling |
+| Silver | `02_quality_checks_drivers.sql` | `bronze.drivers` |
+| Silver | `03_quality_checks_customers.sql` | `bronze.customers` |
+| Silver | `04_explore_customer_type.sql` | `bronze.customers` — type analysis |
+| Silver | `05_quality_checks_facilities.sql` | `bronze.facilities` |
+| Silver | `06_quality_checks_routes.sql` | `bronze.routes` |
+| Silver | `07_quality_checks_trailers.sql` | `bronze.trailers` |
+| Silver | `08_quality_checks_trucks.sql` | `bronze.trucks` |
+| Silver | `09_quality_checks_delivery_events.sql` | `bronze.delivery_events` |
+| Silver | `10_quality_checks_fuel_purchases.sql` | `bronze.fuel_purchases` |
+| Silver | `11_quality_checks_loads.sql` | `bronze.loads` |
+| Silver | `12_quality_checks_maintenance_records.sql` | `bronze.maintenance_records` |
+| Silver | `13_quality_checks_safety_incidents.sql` | `bronze.safety_incidents` |
+| Silver | `14_quality_checks_trips.sql` | `bronze.trips` |
+| Silver | `15_quality_checks_driver_monthly_metrics.sql` | `bronze.driver_monthly_metrics` |
+| Silver | `16_quality_checks_truck_utilization_metrics.sql` | `bronze.truck_utilization_metrics` |
+| Gold | `01_quality_checks_dimensions.sql` | All 7 dimension tables |
+| Gold | `02_quality_checks_facts.sql` | All 5 fact tables |
 
 ---
 
@@ -302,8 +471,88 @@ For a dataset of this scale (~361K rows), a full truncate-and-reload on each run
 ### Why Separate DDL from Load Scripts?
 Separating schema creation (`01_create_*.sql`) from data loading (`04_load_*.sql`) means schema changes can be reviewed and deployed independently — load jobs never break because of a DDL modification.
 
+### Why Surrogate Keys in Gold?
+Integer surrogate keys (`INT IDENTITY`) are smaller, faster for joins, and independent of source system key changes. Natural keys are retained alongside surrogate keys for traceability and debugging.
+
+### Why a Date Dimension?
+A pre-generated calendar table (`gold.dim_date`) enables time-based grouping (year, quarter, month, day, weekend) without runtime date functions — essential for performant analytical queries and BI tool compatibility.
+
 ### Why a Tests Directory?
 Separating validation logic from production ETL is a senior engineering discipline. The `tests/` directory provides a reusable audit trail of every data quality decision — invaluable for onboarding new engineers and diagnosing future data issues.
+
+---
+
+## 📊 Database Schema
+
+### Bronze Schema (14 tables — Raw)
+
+All columns `NULLable`. Exact replicas of source CSVs.
+
+```
+bronze.drivers                  (driver_id, first_name, last_name, hire_date, ...)
+bronze.customers                (customer_id, customer_name, customer_type, ...)
+bronze.facilities               (facility_id, facility_name, facility_type, city, state, ...)
+bronze.routes                   (route_id, origin_city, origin_state, destination_city, ...)
+bronze.trailers                 (trailer_id, trailer_number, trailer_type, length_feet, ...)
+bronze.trucks                   (truck_id, unit_number, make, model_year, vin, ...)
+bronze.delivery_events          (event_id, load_id, trip_id, event_type, ...)
+bronze.fuel_purchases           (fuel_purchase_id, trip_id, truck_id, driver_id, ...)
+bronze.loads                    (load_id, customer_id, route_id, load_date, ...)
+bronze.maintenance_records      (maintenance_id, truck_id, maintenance_date, ...)
+bronze.safety_incidents         (incident_id, trip_id, truck_id, driver_id, ...)
+bronze.trips                    (trip_id, load_id, driver_id, truck_id, trailer_id, ...)
+bronze.driver_monthly_metrics   (driver_id, month, trips_completed, total_miles, ...)
+bronze.truck_utilization_metrics (truck_id, month, trips_completed, total_miles, ...)
+```
+
+### Silver Schema (14 tables — Cleansed + `dwh_create_date`)
+
+All string columns trimmed. Categorical fields standardised. Deduplicated on primary keys.
+
+```
+silver.drivers                  (driver_id, first_name, last_name, ..., dwh_create_date)
+silver.customers                (customer_id, customer_name, ..., dwh_create_date)
+silver.facilities               (facility_id, facility_name, ..., dwh_create_date)
+silver.routes                   (route_id, origin_city, ..., dwh_create_date)
+silver.trailers                 (trailer_id, trailer_number, ..., dwh_create_date)
+silver.trucks                   (truck_id, unit_number, ..., dwh_create_date)
+silver.delivery_events          (event_id, load_id, ..., dwh_create_date)
+silver.fuel_purchases           (fuel_purchase_id, trip_id, ..., dwh_create_date)
+silver.loads                    (load_id, customer_id, ..., dwh_create_date)
+silver.maintenance_records      (maintenance_id, truck_id, ..., dwh_create_date)
+silver.safety_incidents         (incident_id, trip_id, ..., dwh_create_date)
+silver.trips                    (trip_id, load_id, ..., dwh_create_date)
+silver.driver_monthly_metrics   (driver_id, month, ..., dwh_create_date)
+silver.truck_utilization_metrics (truck_id, month, ..., dwh_create_date)
+```
+
+### Gold Schema (12 tables — Star Schema)
+
+**Dimensions (7 tables)**
+```
+gold.dim_driver     (driver_key PK, driver_id, full_name, hire_date, employment_status, ...)
+gold.dim_truck      (truck_key PK, truck_id, make, model_year, truck_age_years, ...)
+gold.dim_trailer    (trailer_key PK, trailer_id, trailer_type, length_feet, ...)
+gold.dim_customer   (customer_key PK, customer_id, customer_name, customer_type, ...)
+gold.dim_facility   (facility_key PK, facility_id, facility_name, city, state, ...)
+gold.dim_route      (route_key PK, route_id, origin_city, destination_city, lane_description, ...)
+gold.dim_date       (date_key PK, full_date, year, quarter, month, month_name, is_weekend, ...)
+```
+
+**Facts (5 tables)**
+```
+gold.fact_trip           (trip_key PK, driver_key FK, truck_key FK, trailer_key FK,
+                          customer_key FK, route_key FK, dispatch_date_key FK,
+                          trip_id, revenue, total_revenue, actual_distance_miles, ...)
+gold.fact_fuel_purchase  (fuel_purchase_key PK, driver_key FK, truck_key FK,
+                          purchase_date_key FK, gallons, price_per_gallon, total_cost, ...)
+gold.fact_maintenance    (maintenance_key PK, truck_key FK, maintenance_date_key FK,
+                          labor_cost, parts_cost, total_cost, downtime_hours, ...)
+gold.fact_safety         (safety_key PK, driver_key FK, truck_key FK, incident_date_key FK,
+                          vehicle_damage_cost, cargo_damage_cost, total_damage_cost, ...)
+gold.fact_delivery       (delivery_key PK, facility_key FK,
+                          detention_minutes, on_time_flag, ...)
+```
 
 ---
 
