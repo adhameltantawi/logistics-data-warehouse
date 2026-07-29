@@ -52,7 +52,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.delivery_events';
         BULK INSERT bronze.delivery_events
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\transactions\delivery_events.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\transactions\delivery_events.csv'
         WITH
         (
             FIRSTROW        = 2,
@@ -74,7 +74,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.fuel_purchases';
         BULK INSERT bronze.fuel_purchases
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\transactions\fuel_purchases.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\transactions\fuel_purchases.csv'
         WITH
         (
             FIRSTROW        = 2,
@@ -96,7 +96,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.loads';
         BULK INSERT bronze.loads
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\transactions\loads.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\transactions\loads.csv'
         WITH
         (
             FIRSTROW        = 2,
@@ -118,7 +118,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.maintenance_records';
         BULK INSERT bronze.maintenance_records
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\transactions\maintenance_records.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\transactions\maintenance_records.csv'
         WITH
         (
             FIRSTROW        = 2,
@@ -140,7 +140,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.safety_incidents';
         BULK INSERT bronze.safety_incidents
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\transactions\safety_incidents.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\transactions\safety_incidents.csv'
         WITH
         (
             FIRSTROW        = 2,
@@ -162,7 +162,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.trips';
         BULK INSERT bronze.trips
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\transactions\trips.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\transactions\trips.csv'
         WITH
         (
             FIRSTROW        = 2,

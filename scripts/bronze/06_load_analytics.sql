@@ -48,7 +48,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.driver_monthly_metrics';
         BULK INSERT bronze.driver_monthly_metrics
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\analytics\driver_monthly_metrics.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\analytics\driver_monthly_metrics.csv'
         WITH
         (
             FIRSTROW        = 2,
@@ -70,7 +70,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.truck_utilization_metrics';
         BULK INSERT bronze.truck_utilization_metrics
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\analytics\truck_utilization_metrics.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\analytics\truck_utilization_metrics.csv'
         WITH
         (
             FIRSTROW        = 2,

@@ -52,7 +52,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.drivers';
         BULK INSERT bronze.drivers
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\drivers.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\reference\drivers.csv'
         WITH
         (
             FIRSTROW       = 2,
@@ -74,7 +74,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.customers';
         BULK INSERT bronze.customers
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\customers.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\reference\customers.csv'
         WITH
         (
             FIRSTROW       = 2,
@@ -96,7 +96,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.facilities';
         BULK INSERT bronze.facilities
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\facilities.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\reference\facilities.csv'
         WITH
         (
             FIRSTROW       = 2,
@@ -118,7 +118,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.routes';
         BULK INSERT bronze.routes
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\routes.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\reference\routes.csv'
         WITH
         (
             FIRSTROW       = 2,
@@ -140,7 +140,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.trailers';
         BULK INSERT bronze.trailers
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\trailers.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\reference\trailers.csv'
         WITH
         (
             FIRSTROW       = 2,
@@ -162,7 +162,7 @@ BEGIN
 
         PRINT '>> Loading Data into Table: bronze.trucks';
         BULK INSERT bronze.trucks
-        FROM 'D:\data\data projects\logistics-data-warehouse\datasets\reference\trucks.csv'
+        FROM 'E:\data\logistics-data-warehouse\datasets\reference\trucks.csv'
         WITH
         (
             FIRSTROW       = 2,
