@@ -1,0 +1,168 @@
+table dim_driver
+	lineageTag: 5a8e4e0e-1da3-40b1-9ae6-97d8ee31f0cd
+
+	column driver_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 29ff94bb-61f0-4f74-b1e4-f1721f41c680
+		summarizeBy: none
+		sourceColumn: driver_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column driver_id
+		dataType: string
+		lineageTag: 2300dc9d-c47c-430c-ab98-1ed058c75658
+		summarizeBy: none
+		sourceColumn: driver_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_name
+		dataType: string
+		lineageTag: 93e4dc09-192a-44d5-bad3-10a91875201e
+		summarizeBy: none
+		sourceColumn: first_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_name
+		dataType: string
+		lineageTag: 71117dc6-6999-4a66-a571-1ada32c7dc73
+		summarizeBy: none
+		sourceColumn: last_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_name
+		dataType: string
+		lineageTag: 4151d8ea-0b1d-4feb-9a75-df580446ac53
+		summarizeBy: none
+		sourceColumn: full_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column hire_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 33f2a527-15ee-4991-ba0c-c8a5e9fe4e44
+		summarizeBy: none
+		sourceColumn: hire_date
+
+		variation Variation
+			isDefault
+			relationship: 41e23ad3-a4a5-4fbd-9433-d1c138c6dd5b
+			defaultHierarchy: LocalDateTable_6d6b97b0-099d-4a8e-bd8b-a04fa044675b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column termination_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 71e16b36-0375-448e-8bfd-2ad1852854e1
+		summarizeBy: none
+		sourceColumn: termination_date
+
+		variation Variation
+			isDefault
+			relationship: e3cced80-9730-4dbd-a084-3ec044111f71
+			defaultHierarchy: LocalDateTable_b484e75c-8111-493b-99fc-57c2a51cdf9d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column license_number
+		dataType: string
+		lineageTag: cb9d98ca-432f-4933-8325-735afb52864c
+		summarizeBy: none
+		sourceColumn: license_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column license_state
+		dataType: string
+		lineageTag: 2fb6c682-c341-4cab-b3be-2bdb0585fa7e
+		summarizeBy: none
+		sourceColumn: license_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_of_birth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: dcece86a-3242-498f-93bc-2dd67dacd754
+		summarizeBy: none
+		sourceColumn: date_of_birth
+
+		variation Variation
+			isDefault
+			relationship: 72213ad8-55b8-40b6-a281-6a74b48344fb
+			defaultHierarchy: LocalDateTable_a362b753-5923-485b-b001-b5bf1636df2c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column home_terminal
+		dataType: string
+		lineageTag: aeb453e7-7085-4bd8-99a0-68065c111f2d
+		summarizeBy: none
+		sourceColumn: home_terminal
+
+		annotation SummarizationSetBy = Automatic
+
+	column employment_status
+		dataType: string
+		lineageTag: a3b1c9c7-7ec8-4894-9efc-b40592e462de
+		summarizeBy: none
+		sourceColumn: employment_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column cdl_class
+		dataType: string
+		lineageTag: 0d505cba-e8ea-442e-b07d-166c9943acfe
+		summarizeBy: none
+		sourceColumn: cdl_class
+
+		annotation SummarizationSetBy = Automatic
+
+	column years_experience
+		dataType: int64
+		formatString: 0
+		lineageTag: faf5ef15-cffa-4b4a-bdb6-dc8636f69167
+		summarizeBy: sum
+		sourceColumn: years_experience
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e994cc12-b399-434f-9d2a-0f79366d7ad9
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: d125d4db-7a73-4caf-9b34-b48adbb42660
+			defaultHierarchy: LocalDateTable_ce5bf5de-6264-4573-8406-66522a3f309e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_driver = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "dim_driver", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"driver_key", Int64.Type}, {"driver_id", type text}, {"first_name", type text}, {"last_name", type text}, {"full_name", type text}, {"hire_date", type date}, {"termination_date", type date}, {"license_number", type text}, {"license_state", type text}, {"date_of_birth", type date}, {"home_terminal", type text}, {"employment_status", type text}, {"cdl_class", type text}, {"years_experience", Int64.Type}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

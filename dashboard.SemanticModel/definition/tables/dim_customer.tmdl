@@ -1,0 +1,113 @@
+table dim_customer
+	lineageTag: 2bc0ec64-712c-4597-9b57-068d747aa4e6
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 369f3a1b-e5ab-4fdf-82f5-e3d88cae0174
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: fca0edcb-ca32-45df-a255-31374cc90e08
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_name
+		dataType: string
+		lineageTag: c65124a6-b2e8-4042-bd48-214abbcc008a
+		summarizeBy: none
+		sourceColumn: customer_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_type
+		dataType: string
+		lineageTag: f4678a8d-86c1-4664-9607-6033eb4af912
+		summarizeBy: none
+		sourceColumn: customer_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column credit_terms_days
+		dataType: int64
+		formatString: 0
+		lineageTag: ef16fdc3-51ea-4ac6-a4a7-222ff196cab5
+		summarizeBy: sum
+		sourceColumn: credit_terms_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_freight_type
+		dataType: string
+		lineageTag: 2cb8eb66-0e2b-4a93-a5fc-a12af676590a
+		summarizeBy: none
+		sourceColumn: primary_freight_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_status
+		dataType: string
+		lineageTag: b3d86ffa-6254-4241-9577-f31215e52a41
+		summarizeBy: none
+		sourceColumn: account_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column contract_start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c7161647-63e0-41f4-b2ca-594e325d3772
+		summarizeBy: none
+		sourceColumn: contract_start_date
+
+		variation Variation
+			isDefault
+			relationship: 325d5007-3072-4a18-9089-3227795e0a71
+			defaultHierarchy: LocalDateTable_b91df865-871c-4455-a68b-0352985e9579.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column annual_revenue_potential
+		dataType: int64
+		formatString: 0
+		lineageTag: 671974d9-6c79-46e0-99cf-563d073ee13f
+		summarizeBy: sum
+		sourceColumn: annual_revenue_potential
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 13e5ae57-6488-49f8-b774-d2a87430cabe
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: 35833927-1865-412b-9331-b22cfefad5cb
+			defaultHierarchy: LocalDateTable_3504549a-5fac-4875-8d7c-d4ef572fe453.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "dim_customer", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"customer_key", Int64.Type}, {"customer_id", type text}, {"customer_name", type text}, {"customer_type", type text}, {"credit_terms_days", Int64.Type}, {"primary_freight_type", type text}, {"account_status", type text}, {"contract_start_date", type date}, {"annual_revenue_potential", Int64.Type}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

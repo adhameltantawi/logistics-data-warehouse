@@ -1,0 +1,181 @@
+table fact_delivery
+	lineageTag: 8cccd9b6-126b-4877-90d1-138f5c0b9ae8
+
+	column delivery_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 08754dc4-b5c7-414a-b9ab-0ceabadfd615
+		summarizeBy: sum
+		sourceColumn: delivery_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 6f35b12c-1d92-4afa-900c-15f74cc6492b
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column driver_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5da02e77-18eb-4a96-a469-bdfb274aac7d
+		summarizeBy: none
+		sourceColumn: driver_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c4c075d-fea1-4c8a-bc1b-3af97869e490
+		summarizeBy: none
+		sourceColumn: truck_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: d8cc6184-09a4-48d3-803f-a97d40fa1b2d
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column route_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 23df8f6a-7916-4d65-aa83-8019351978c6
+		summarizeBy: none
+		sourceColumn: route_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9e95d3be-d0e7-4142-b40f-49ed20ece2e5
+		summarizeBy: sum
+		sourceColumn: event_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_id
+		dataType: string
+		lineageTag: e1a596ac-cab5-46c7-b718-197a154afc9a
+		summarizeBy: none
+		sourceColumn: event_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_id
+		dataType: string
+		lineageTag: 4338e4b6-478a-4d07-9a17-58818da8300a
+		summarizeBy: none
+		sourceColumn: load_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column trip_id
+		dataType: string
+		lineageTag: a5248e75-743e-4780-bfcd-bb4f0d08577e
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column detention_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: e5b09e27-5e83-4763-b507-eb5d29df5946
+		summarizeBy: sum
+		sourceColumn: detention_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_type
+		dataType: string
+		lineageTag: 65fd2cdd-0403-4c5e-b615-9bab3833096a
+		summarizeBy: none
+		sourceColumn: event_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column scheduled_datetime
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 962c2443-deaa-42c2-9902-731ad4956806
+		summarizeBy: none
+		sourceColumn: scheduled_datetime
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column actual_datetime
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: ccc8de77-6eef-4890-9e72-310811dca9c0
+		summarizeBy: none
+		sourceColumn: actual_datetime
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column on_time_flag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b3be3566-94d4-4277-bc5f-0b369998849a
+		summarizeBy: none
+		sourceColumn: on_time_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_city
+		dataType: string
+		lineageTag: 038ebef3-fe5b-4041-a1de-b2caa658157a
+		summarizeBy: none
+		sourceColumn: location_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_state
+		dataType: string
+		lineageTag: d2eeb133-f232-43b3-8ff4-37cec591578c
+		summarizeBy: none
+		sourceColumn: location_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8abcfb0c-b2d0-45a3-b96a-a4ced441fd4f
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: 5be59302-aff9-4d8e-b880-8f8b3c6950d8
+			defaultHierarchy: LocalDateTable_9fe9df2e-5e5a-4d98-9c79-e5e67a5d868e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_delivery = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "fact_delivery", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"delivery_key", Int64.Type}, {"facility_key", Int64.Type}, {"driver_key", Int64.Type}, {"truck_key", Int64.Type}, {"customer_key", Int64.Type}, {"route_key", Int64.Type}, {"event_date_key", Int64.Type}, {"event_id", type text}, {"load_id", type text}, {"trip_id", type text}, {"detention_minutes", Int64.Type}, {"event_type", type text}, {"scheduled_datetime", type time}, {"actual_datetime", type time}, {"on_time_flag", type logical}, {"location_city", type text}, {"location_state", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

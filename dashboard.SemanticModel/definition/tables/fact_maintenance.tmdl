@@ -1,0 +1,148 @@
+table fact_maintenance
+	lineageTag: 2a4a2103-195d-4a43-8e4e-76ab18dc3368
+
+	column maintenance_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3840f862-8532-4484-b252-070d8e07487d
+		summarizeBy: sum
+		sourceColumn: maintenance_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 448a0454-db32-4e60-8907-0082f765fc7f
+		summarizeBy: none
+		sourceColumn: truck_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintenance_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 150a8561-361e-4110-a16a-a20437112fa6
+		summarizeBy: sum
+		sourceColumn: maintenance_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintenance_id
+		dataType: string
+		lineageTag: d8641676-9c13-4c38-bc77-17632cdfa80c
+		summarizeBy: none
+		sourceColumn: maintenance_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column odometer_reading
+		dataType: int64
+		formatString: 0
+		lineageTag: 07356ead-00eb-43a0-9218-9f2353724d29
+		summarizeBy: sum
+		sourceColumn: odometer_reading
+
+		annotation SummarizationSetBy = Automatic
+
+	column labor_hours
+		dataType: double
+		lineageTag: bdff204a-efbe-4620-a481-0394e66dffd4
+		summarizeBy: sum
+		sourceColumn: labor_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column labor_cost
+		dataType: double
+		lineageTag: 7b7ae947-8c2f-4e11-97b8-2ba1c474c041
+		summarizeBy: sum
+		sourceColumn: labor_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column parts_cost
+		dataType: double
+		lineageTag: b59dc796-6c3c-4daf-bf8f-6062b065124b
+		summarizeBy: sum
+		sourceColumn: parts_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_cost
+		dataType: double
+		lineageTag: bcded633-b50b-42e8-9440-90a1411d2964
+		summarizeBy: sum
+		sourceColumn: total_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column downtime_hours
+		dataType: double
+		lineageTag: 793e9d0b-d6b7-431b-b3f7-5350e23e9ec4
+		summarizeBy: sum
+		sourceColumn: downtime_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column maintenance_type
+		dataType: string
+		lineageTag: b0b8b945-dcd2-4beb-a21f-b48b980e62b7
+		summarizeBy: none
+		sourceColumn: maintenance_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_location
+		dataType: string
+		lineageTag: c3aec042-941c-499d-aa88-53c12ab89ce5
+		summarizeBy: none
+		sourceColumn: facility_location
+
+		annotation SummarizationSetBy = Automatic
+
+	column service_description
+		dataType: string
+		lineageTag: fc68d34e-da0f-4e26-a7aa-111fd5b2a070
+		summarizeBy: none
+		sourceColumn: service_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 35a9bb78-5697-4a00-ba4e-dfec985fdc82
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: a583c611-e392-4249-a71f-d7859c070732
+			defaultHierarchy: LocalDateTable_90b0719c-1db8-4934-b3a9-d6b01312d1e9.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_maintenance = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "fact_maintenance", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"maintenance_key", Int64.Type}, {"truck_key", Int64.Type}, {"maintenance_date_key", Int64.Type}, {"maintenance_id", type text}, {"odometer_reading", Int64.Type}, {"labor_hours", type number}, {"labor_cost", type number}, {"parts_cost", type number}, {"total_cost", type number}, {"downtime_hours", type number}, {"maintenance_type", type text}, {"facility_location", type text}, {"service_description", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

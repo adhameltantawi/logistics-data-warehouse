@@ -1,0 +1,247 @@
+table fact_trip
+	lineageTag: 8d931d34-dcb9-4069-a8c1-533151370dd9
+
+	column trip_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d02a71d-dccb-411d-aa02-1b6f9df836c2
+		summarizeBy: sum
+		sourceColumn: trip_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column driver_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3478409d-15fa-46d9-825b-cc313be55d32
+		summarizeBy: none
+		sourceColumn: driver_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_key
+		dataType: int64
+		formatString: 0
+		lineageTag: c4ea0a39-4987-4aef-a322-09ae3c938329
+		summarizeBy: none
+		sourceColumn: truck_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column trailer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 020794ec-fe01-40c5-8afc-1931971984f5
+		summarizeBy: none
+		sourceColumn: trailer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: df97aa5c-1e12-4955-9b2c-8115f56ed4d9
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column route_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9723d253-33f3-4191-bf44-563214e011d2
+		summarizeBy: none
+		sourceColumn: route_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column dispatch_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ba6e254c-35e3-4a66-bab9-7d4e5e0c36f6
+		summarizeBy: sum
+		sourceColumn: dispatch_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column trip_id
+		dataType: string
+		lineageTag: 690d761f-ec72-4024-998c-1cd3d112e6ab
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_id
+		dataType: string
+		lineageTag: 71ca30e9-24f5-41f6-89dd-e57029852038
+		summarizeBy: none
+		sourceColumn: load_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_distance_miles
+		dataType: int64
+		formatString: 0
+		lineageTag: 429dbc0c-3b0a-422d-a3ad-5b6e32662246
+		summarizeBy: sum
+		sourceColumn: actual_distance_miles
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_duration_hours
+		dataType: double
+		lineageTag: 2d01dce4-38ec-4041-8a8c-60ed21c22abf
+		summarizeBy: sum
+		sourceColumn: actual_duration_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fuel_gallons_used
+		dataType: double
+		lineageTag: 47eadfd8-6437-42ba-9f18-9669a1e3bc12
+		summarizeBy: sum
+		sourceColumn: fuel_gallons_used
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column average_mpg
+		dataType: double
+		lineageTag: 260a7f3a-5824-4337-870c-c8b1b551128b
+		summarizeBy: sum
+		sourceColumn: average_mpg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column idle_time_hours
+		dataType: double
+		lineageTag: 39822b4c-2ed9-4c4a-8061-d4a94208ebe3
+		summarizeBy: sum
+		sourceColumn: idle_time_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column revenue
+		dataType: double
+		lineageTag: d5e66ccc-58d2-443c-aebc-395f15b8c1d7
+		summarizeBy: sum
+		sourceColumn: revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fuel_surcharge
+		dataType: double
+		lineageTag: f0bfc60e-f7dd-4044-abd8-1b494cba3799
+		summarizeBy: sum
+		sourceColumn: fuel_surcharge
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column accessorial_charges
+		dataType: int64
+		formatString: 0
+		lineageTag: a771ec83-66da-4351-8e7c-53f5314a4344
+		summarizeBy: sum
+		sourceColumn: accessorial_charges
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_revenue
+		dataType: double
+		lineageTag: 1ce15c6a-63e6-4ad9-96b4-ec3fa0eadac8
+		summarizeBy: sum
+		sourceColumn: total_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column weight_lbs
+		dataType: int64
+		formatString: 0
+		lineageTag: e83a2ba6-9cf2-4447-bf3e-eec8e800ff58
+		summarizeBy: sum
+		sourceColumn: weight_lbs
+
+		annotation SummarizationSetBy = Automatic
+
+	column pieces
+		dataType: int64
+		formatString: 0
+		lineageTag: 153c5323-2183-49a3-82d5-838a30a1381e
+		summarizeBy: sum
+		sourceColumn: pieces
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_type
+		dataType: string
+		lineageTag: 7499452f-7b6e-4732-b2e2-c4fd4ac9fc8d
+		summarizeBy: none
+		sourceColumn: load_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_status
+		dataType: string
+		lineageTag: 0550d54e-a22f-4e44-adf5-b3bf264b182f
+		summarizeBy: none
+		sourceColumn: load_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column booking_type
+		dataType: string
+		lineageTag: 6b827b2a-5d26-4c06-8446-f055514d122d
+		summarizeBy: none
+		sourceColumn: booking_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column trip_status
+		dataType: string
+		lineageTag: 76a1c5b0-838b-41d8-9615-3da4a76e20fc
+		summarizeBy: none
+		sourceColumn: trip_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5fba225c-c789-42e2-b958-972c492db17f
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: fe041e26-15bd-4c6a-923f-5966fbce6ffa
+			defaultHierarchy: LocalDateTable_820c5382-6b7b-418b-8809-13638e623cfa.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_trip = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "fact_trip", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"trip_key", Int64.Type}, {"driver_key", Int64.Type}, {"truck_key", Int64.Type}, {"trailer_key", Int64.Type}, {"customer_key", Int64.Type}, {"route_key", Int64.Type}, {"dispatch_date_key", Int64.Type}, {"trip_id", type text}, {"load_id", type text}, {"actual_distance_miles", Int64.Type}, {"actual_duration_hours", type number}, {"fuel_gallons_used", type number}, {"average_mpg", type number}, {"idle_time_hours", type number}, {"revenue", type number}, {"fuel_surcharge", type number}, {"accessorial_charges", Int64.Type}, {"total_revenue", type number}, {"weight_lbs", Int64.Type}, {"pieces", Int64.Type}, {"load_type", type text}, {"load_status", type text}, {"booking_type", type text}, {"trip_status", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

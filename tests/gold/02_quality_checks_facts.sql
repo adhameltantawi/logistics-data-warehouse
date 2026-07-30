@@ -85,6 +85,36 @@ FROM gold.fact_delivery fd
 WHERE fd.facility_key IS NOT NULL
   AND NOT EXISTS (SELECT 1 FROM gold.dim_facility df WHERE df.facility_key = fd.facility_key);
 
+-- fact_delivery: Check for orphaned driver_key
+SELECT 'fact_delivery → dim_driver' AS check_name, COUNT(*) AS orphans
+FROM gold.fact_delivery fd
+WHERE fd.driver_key IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM gold.dim_driver dd WHERE dd.driver_key = fd.driver_key);
+
+-- fact_delivery: Check for orphaned truck_key
+SELECT 'fact_delivery → dim_truck' AS check_name, COUNT(*) AS orphans
+FROM gold.fact_delivery fd
+WHERE fd.truck_key IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM gold.dim_truck dt WHERE dt.truck_key = fd.truck_key);
+
+-- fact_delivery: Check for orphaned customer_key
+SELECT 'fact_delivery → dim_customer' AS check_name, COUNT(*) AS orphans
+FROM gold.fact_delivery fd
+WHERE fd.customer_key IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM gold.dim_customer dc WHERE dc.customer_key = fd.customer_key);
+
+-- fact_delivery: Check for orphaned route_key
+SELECT 'fact_delivery → dim_route' AS check_name, COUNT(*) AS orphans
+FROM gold.fact_delivery fd
+WHERE fd.route_key IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM gold.dim_route dr WHERE dr.route_key = fd.route_key);
+
+-- fact_delivery: Check for orphaned event_date_key
+SELECT 'fact_delivery → dim_date' AS check_name, COUNT(*) AS orphans
+FROM gold.fact_delivery fd
+WHERE fd.event_date_key IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM gold.dim_date dd WHERE dd.date_key = fd.event_date_key);
+
 
 -- =============================================================
 -- 4. Measure Sanity Checks — fact_trip

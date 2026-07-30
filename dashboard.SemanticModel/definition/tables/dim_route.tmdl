@@ -1,0 +1,125 @@
+table dim_route
+	lineageTag: 6f16662a-cbe6-408b-8948-1a6135d3d022
+
+	column route_key
+		dataType: int64
+		formatString: 0
+		lineageTag: bf803df9-654f-4a86-b5f6-29e795929ca5
+		summarizeBy: none
+		sourceColumn: route_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column route_id
+		dataType: string
+		lineageTag: c2de0a3d-1909-4fdf-8325-d4c086acdf6d
+		summarizeBy: none
+		sourceColumn: route_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin_city
+		dataType: string
+		lineageTag: 701e6f66-5777-479e-b423-1815356f364d
+		summarizeBy: none
+		sourceColumn: origin_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin_state
+		dataType: string
+		lineageTag: a8a0e5f5-5246-4a14-a222-a58ed103180c
+		summarizeBy: none
+		sourceColumn: origin_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_city
+		dataType: string
+		lineageTag: b392dc94-ac29-4d43-beb5-8b4b9e8d598a
+		summarizeBy: none
+		sourceColumn: destination_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_state
+		dataType: string
+		lineageTag: cb2d822f-9634-4e59-818f-3d78d1e17e59
+		summarizeBy: none
+		sourceColumn: destination_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column typical_distance_miles
+		dataType: int64
+		formatString: 0
+		lineageTag: a2c933be-ce67-460f-a3b9-d06cd1dbea4b
+		summarizeBy: sum
+		sourceColumn: typical_distance_miles
+
+		annotation SummarizationSetBy = Automatic
+
+	column base_rate_per_mile
+		dataType: double
+		lineageTag: 2d454363-a278-445b-837f-8371cbdcdd1a
+		summarizeBy: sum
+		sourceColumn: base_rate_per_mile
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fuel_surcharge_rate
+		dataType: double
+		lineageTag: ddf5a177-b2f4-40ae-8b1c-9edbb56717c4
+		summarizeBy: sum
+		sourceColumn: fuel_surcharge_rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column typical_transit_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a1b3ae9-2783-4326-90a1-43576806543b
+		summarizeBy: sum
+		sourceColumn: typical_transit_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column lane_description
+		dataType: string
+		lineageTag: 92af7723-f325-4e5d-8870-d385d03a7b33
+		summarizeBy: none
+		sourceColumn: lane_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 22664063-51b8-47d3-a938-e4293c3925bc
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: 7c527a29-7b74-42af-b8fd-9cc928639b12
+			defaultHierarchy: LocalDateTable_5583736a-fb98-45a2-bfe7-581a17864977.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_route = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "dim_route", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"route_key", Int64.Type}, {"route_id", type text}, {"origin_city", type text}, {"origin_state", type text}, {"destination_city", type text}, {"destination_state", type text}, {"typical_distance_miles", Int64.Type}, {"base_rate_per_mile", type number}, {"fuel_surcharge_rate", type number}, {"typical_transit_days", Int64.Type}, {"lane_description", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

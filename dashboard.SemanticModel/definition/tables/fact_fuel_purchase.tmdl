@@ -1,0 +1,136 @@
+table fact_fuel_purchase
+	lineageTag: ef8a78c7-87c4-43bd-b229-8cffb8104544
+
+	column fuel_purchase_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 4488ffb0-bf7e-4936-bff6-3dbc137f5d58
+		summarizeBy: sum
+		sourceColumn: fuel_purchase_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column driver_key
+		dataType: int64
+		formatString: 0
+		lineageTag: f4aa81dc-ca00-4607-8c27-7d92675a943b
+		summarizeBy: none
+		sourceColumn: driver_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_key
+		dataType: int64
+		formatString: 0
+		lineageTag: f94adfb4-3fb7-4823-91fa-232584a136b0
+		summarizeBy: none
+		sourceColumn: truck_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 47dbe8ee-6846-40cb-9c75-613b3817ab70
+		summarizeBy: sum
+		sourceColumn: purchase_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_purchase_id
+		dataType: string
+		lineageTag: 036c2e6d-1204-40ac-ae9a-88e02474fc49
+		summarizeBy: none
+		sourceColumn: fuel_purchase_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column trip_id
+		dataType: string
+		lineageTag: 4e044e10-c892-4db2-a7d1-fc0aa7674988
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column gallons
+		dataType: double
+		lineageTag: 8515252d-6ece-45d3-af29-1ee6b51f1ee1
+		summarizeBy: sum
+		sourceColumn: gallons
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column price_per_gallon
+		dataType: double
+		lineageTag: 512e7bc0-bb58-48a0-9dc7-5f2a7227dd5a
+		summarizeBy: sum
+		sourceColumn: price_per_gallon
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_cost
+		dataType: double
+		lineageTag: 95f73886-1daf-4541-8d25-c2826f5a1cc6
+		summarizeBy: sum
+		sourceColumn: total_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column location_city
+		dataType: string
+		lineageTag: f36b78ff-27e7-47f8-8b96-bf2829ffa063
+		summarizeBy: none
+		sourceColumn: location_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_state
+		dataType: string
+		lineageTag: 4f3857ba-dcae-4634-85f6-bc74c011de82
+		summarizeBy: none
+		sourceColumn: location_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_card_number
+		dataType: string
+		lineageTag: a9c8bfcf-d15b-49b9-848a-9696351ec720
+		summarizeBy: none
+		sourceColumn: fuel_card_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 716310fd-e2cd-4c14-9b8e-67da059872f0
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: 4048182e-8dfd-429d-8ba2-4d50dd1521c3
+			defaultHierarchy: LocalDateTable_035d2755-a6f3-4be8-990a-c3c3075c6ba9.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_fuel_purchase = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "fact_fuel_purchase", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"fuel_purchase_key", Int64.Type}, {"driver_key", Int64.Type}, {"truck_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"fuel_purchase_id", type text}, {"trip_id", type text}, {"gallons", type number}, {"price_per_gallon", type number}, {"total_cost", type number}, {"location_city", type text}, {"location_state", type text}, {"fuel_card_number", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

@@ -61,7 +61,7 @@ IF OBJECT_ID('bronze.customers', 'U') IS NOT NULL
 
 GO
 
-CREATE TABLE bronze.customerss
+CREATE TABLE bronze.customers
   (
      customer_id              NVARCHAR(20)  NULL,
      customer_name            NVARCHAR(100) NULL,

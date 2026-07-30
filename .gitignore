@@ -1,0 +1,10 @@
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Large generated files and scratch
+*.xlsx
+*.csv
+logistics_analysis.html
+scratch/
+__pycache__/
+.DS_Store

@@ -1,0 +1,181 @@
+table fact_safety
+	lineageTag: 5cd5ca1f-b676-4fad-804a-38c0acd3dc22
+
+	column safety_key
+		dataType: int64
+		formatString: 0
+		lineageTag: e654f540-b909-412d-9658-36c6a6123f78
+		summarizeBy: sum
+		sourceColumn: safety_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column driver_key
+		dataType: int64
+		formatString: 0
+		lineageTag: a88e2ddb-9382-4fad-a747-f5fafb951930
+		summarizeBy: none
+		sourceColumn: driver_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_key
+		dataType: int64
+		formatString: 0
+		lineageTag: be4bfa6c-2dbf-44c7-bf39-8a8c84c94c73
+		summarizeBy: none
+		sourceColumn: truck_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: b5d582b8-a30f-4ac1-a2c7-0187670f0aaa
+		summarizeBy: sum
+		sourceColumn: incident_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_id
+		dataType: string
+		lineageTag: 1d9a1c58-5638-44a5-9216-89625caca183
+		summarizeBy: none
+		sourceColumn: incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column trip_id
+		dataType: string
+		lineageTag: a097a0a6-48d2-414e-9ddf-50e87d33b7de
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_damage_cost
+		dataType: double
+		lineageTag: 3074fce6-45bb-4ef0-8b72-d6ecc3c0643d
+		summarizeBy: sum
+		sourceColumn: vehicle_damage_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cargo_damage_cost
+		dataType: double
+		lineageTag: dbd581fe-bd46-41c8-8e4c-4e9b7651615e
+		summarizeBy: sum
+		sourceColumn: cargo_damage_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column claim_amount
+		dataType: double
+		lineageTag: b849ac8b-c0f4-43ae-9b65-a85e04f58cde
+		summarizeBy: sum
+		sourceColumn: claim_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_damage_cost
+		dataType: double
+		lineageTag: 4182a557-647d-43eb-85b2-33ce101e75f7
+		summarizeBy: sum
+		sourceColumn: total_damage_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column incident_type
+		dataType: string
+		lineageTag: 8d99eaa9-5030-4940-8920-0aa7f1f6cbde
+		summarizeBy: none
+		sourceColumn: incident_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_city
+		dataType: string
+		lineageTag: 470043fa-62f0-4ac9-bc11-7cfee5fa1116
+		summarizeBy: none
+		sourceColumn: location_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_state
+		dataType: string
+		lineageTag: 8dc865e0-33c1-4bd4-a5b8-88d581f38e81
+		summarizeBy: none
+		sourceColumn: location_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column at_fault_flag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 43829bc8-300d-4c23-b70f-798ce3680377
+		summarizeBy: none
+		sourceColumn: at_fault_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column injury_flag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: bc585e3b-4eae-4f31-8ab4-8b491475b154
+		summarizeBy: none
+		sourceColumn: injury_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column preventable_flag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f795a842-d91f-4c50-9f7b-3b1c5e83b88a
+		summarizeBy: none
+		sourceColumn: preventable_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: bc627fbc-8cae-4a5a-9530-d8fc4a0415cb
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0c94cd7f-5005-4c33-b796-64ea04f899d8
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: 847b1555-c6e8-457a-89bf-7b13c4db503a
+			defaultHierarchy: LocalDateTable_c64c23f5-2a0b-4dcf-b984-ce464180b121.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_safety = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "fact_safety", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"safety_key", Int64.Type}, {"driver_key", Int64.Type}, {"truck_key", Int64.Type}, {"incident_date_key", Int64.Type}, {"incident_id", type text}, {"trip_id", type text}, {"vehicle_damage_cost", type number}, {"cargo_damage_cost", type number}, {"claim_amount", type number}, {"total_damage_cost", type number}, {"incident_type", type text}, {"location_city", type text}, {"location_state", type text}, {"at_fault_flag", type logical}, {"injury_flag", type logical}, {"preventable_flag", type logical}, {"description", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

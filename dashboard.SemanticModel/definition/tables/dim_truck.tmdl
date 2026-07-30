@@ -1,0 +1,148 @@
+table dim_truck
+	lineageTag: 53579f94-e4b7-4ad6-b2d8-aa9b66811b94
+
+	column truck_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 2e7eaa76-c81c-41f4-8197-001257cd1861
+		summarizeBy: none
+		sourceColumn: truck_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_id
+		dataType: string
+		lineageTag: f9674dcf-2c42-44a1-a61b-be99e7cbbf95
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 27752253-ffd2-4b8e-add2-0753726e41e6
+		summarizeBy: sum
+		sourceColumn: unit_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column make
+		dataType: string
+		lineageTag: 031018e4-a21a-4177-b53b-7a978611e0b5
+		summarizeBy: none
+		sourceColumn: make
+
+		annotation SummarizationSetBy = Automatic
+
+	column model_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 0c82eed4-df22-4563-aea0-de64f01aff60
+		summarizeBy: sum
+		sourceColumn: model_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column vin
+		dataType: string
+		lineageTag: 4e5387ed-f795-47ae-a0c2-ba8e47bae5ff
+		summarizeBy: none
+		sourceColumn: vin
+
+		annotation SummarizationSetBy = Automatic
+
+	column acquisition_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0460aff9-5f2e-49e8-8d4b-6dbbc0ab862a
+		summarizeBy: none
+		sourceColumn: acquisition_date
+
+		variation Variation
+			isDefault
+			relationship: 2a5d1b99-3539-43ad-8b17-6581b4a517e7
+			defaultHierarchy: LocalDateTable_d7e805ad-ad4b-4469-a078-9289b278dbc5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column acquisition_mileage
+		dataType: int64
+		formatString: 0
+		lineageTag: f0cb77b0-4874-49b8-bcee-5985dc2592c2
+		summarizeBy: sum
+		sourceColumn: acquisition_mileage
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_type
+		dataType: string
+		lineageTag: 6cde2243-e79d-4850-81fa-1357157b34b3
+		summarizeBy: none
+		sourceColumn: fuel_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column tank_capacity_gallons
+		dataType: int64
+		formatString: 0
+		lineageTag: 2463c32c-38fa-4767-8afd-39481f18ecb6
+		summarizeBy: sum
+		sourceColumn: tank_capacity_gallons
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 48c7cd25-3280-4bad-9b90-2e2dcf5de50e
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column home_terminal
+		dataType: string
+		lineageTag: 49a3457f-61d8-48be-917c-e1da6d7d9de6
+		summarizeBy: none
+		sourceColumn: home_terminal
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_age_years
+		dataType: int64
+		formatString: 0
+		lineageTag: 7922c5ce-50a8-4fb8-84e8-94109260f77a
+		summarizeBy: sum
+		sourceColumn: truck_age_years
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 90bd19f8-5612-45dd-b611-2b1eb3327889
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: 95b133d6-aef8-4a7b-860b-fb50e27e3e2e
+			defaultHierarchy: LocalDateTable_3b61f389-4320-4255-9759-189b8e53f994.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_truck = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "dim_truck", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"truck_key", Int64.Type}, {"truck_id", type text}, {"unit_number", Int64.Type}, {"make", type text}, {"model_year", Int64.Type}, {"vin", type text}, {"acquisition_date", type date}, {"acquisition_mileage", Int64.Type}, {"fuel_type", type text}, {"tank_capacity_gallons", Int64.Type}, {"status", type text}, {"home_terminal", type text}, {"truck_age_years", Int64.Type}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

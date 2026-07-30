@@ -1,0 +1,172 @@
+relationship 325d5007-3072-4a18-9089-3227795e0a71
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_customer.contract_start_date
+	toColumn: LocalDateTable_b91df865-871c-4455-a68b-0352985e9579.Date
+
+relationship 35833927-1865-412b-9331-b22cfefad5cb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_customer.dwh_create_date
+	toColumn: LocalDateTable_3504549a-5fac-4875-8d7c-d4ef572fe453.Date
+
+relationship c7bc9065-175a-4365-b739-dacd8e34c82b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_date.full_date
+	toColumn: LocalDateTable_c038730f-b6b1-4f71-ae17-52725eb91319.Date
+
+relationship 0d980ec7-50c4-42f8-a5b8-6b8d1b506507
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_date.year_month
+	toColumn: LocalDateTable_b055b850-188b-416e-a0ca-76bc0aaca197.Date
+
+relationship 41e23ad3-a4a5-4fbd-9433-d1c138c6dd5b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_driver.hire_date
+	toColumn: LocalDateTable_6d6b97b0-099d-4a8e-bd8b-a04fa044675b.Date
+
+relationship e3cced80-9730-4dbd-a084-3ec044111f71
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_driver.termination_date
+	toColumn: LocalDateTable_b484e75c-8111-493b-99fc-57c2a51cdf9d.Date
+
+relationship 72213ad8-55b8-40b6-a281-6a74b48344fb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_driver.date_of_birth
+	toColumn: LocalDateTable_a362b753-5923-485b-b001-b5bf1636df2c.Date
+
+relationship d125d4db-7a73-4caf-9b34-b48adbb42660
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_driver.dwh_create_date
+	toColumn: LocalDateTable_ce5bf5de-6264-4573-8406-66522a3f309e.Date
+
+relationship e228f4e3-e0e8-4445-9413-6ef3ca5de5c4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_facility.dwh_create_date
+	toColumn: LocalDateTable_83b5f496-c383-49cd-b46b-6e7a4e503253.Date
+
+relationship 7c527a29-7b74-42af-b8fd-9cc928639b12
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_route.dwh_create_date
+	toColumn: LocalDateTable_5583736a-fb98-45a2-bfe7-581a17864977.Date
+
+relationship 95010051-025f-4f04-b28a-9f67cca3a46b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_trailer.acquisition_date
+	toColumn: LocalDateTable_ad9a26e7-fea3-4217-bbc7-5a6024229c03.Date
+
+relationship 45aef2f1-8fd2-4c79-984b-38e08d00f1aa
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_trailer.dwh_create_date
+	toColumn: LocalDateTable_99b12a77-4b75-4795-b525-c1ffd9670c88.Date
+
+relationship 2a5d1b99-3539-43ad-8b17-6581b4a517e7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_truck.acquisition_date
+	toColumn: LocalDateTable_d7e805ad-ad4b-4469-a078-9289b278dbc5.Date
+
+relationship 95b133d6-aef8-4a7b-860b-fb50e27e3e2e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_truck.dwh_create_date
+	toColumn: LocalDateTable_3b61f389-4320-4255-9759-189b8e53f994.Date
+
+relationship 5be59302-aff9-4d8e-b880-8f8b3c6950d8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_delivery.dwh_create_date
+	toColumn: LocalDateTable_9fe9df2e-5e5a-4d98-9c79-e5e67a5d868e.Date
+
+relationship 4048182e-8dfd-429d-8ba2-4d50dd1521c3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_fuel_purchase.dwh_create_date
+	toColumn: LocalDateTable_035d2755-a6f3-4be8-990a-c3c3075c6ba9.Date
+
+relationship a583c611-e392-4249-a71f-d7859c070732
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_maintenance.dwh_create_date
+	toColumn: LocalDateTable_90b0719c-1db8-4934-b3a9-d6b01312d1e9.Date
+
+relationship 847b1555-c6e8-457a-89bf-7b13c4db503a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_safety.dwh_create_date
+	toColumn: LocalDateTable_c64c23f5-2a0b-4dcf-b984-ce464180b121.Date
+
+relationship fe041e26-15bd-4c6a-923f-5966fbce6ffa
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_trip.dwh_create_date
+	toColumn: LocalDateTable_820c5382-6b7b-418b-8809-13638e623cfa.Date
+
+relationship AutoDetected_e63d859d-dab9-4071-8224-82bd4a15eb8d
+	fromColumn: fact_delivery.customer_key
+	toColumn: dim_customer.customer_key
+
+relationship AutoDetected_62a4f34c-1734-4460-a982-09fc69951e90
+	fromColumn: fact_trip.customer_key
+	toColumn: dim_customer.customer_key
+
+relationship AutoDetected_e53446fb-0b17-4ce8-9803-ee16eb27eb4f
+	fromColumn: fact_delivery.driver_key
+	toColumn: dim_driver.driver_key
+
+relationship AutoDetected_ea093567-a22d-4961-b14f-153eb55eca81
+	fromColumn: fact_fuel_purchase.driver_key
+	toColumn: dim_driver.driver_key
+
+relationship AutoDetected_a22b373c-5515-44a1-b493-cdb23e672e25
+	fromColumn: fact_safety.driver_key
+	toColumn: dim_driver.driver_key
+
+relationship AutoDetected_87179a09-2314-4959-8e0a-ef22d1a0893c
+	fromColumn: fact_trip.driver_key
+	toColumn: dim_driver.driver_key
+
+relationship AutoDetected_4c244ff6-e7fa-46d3-806f-4ebd473281e6
+	fromColumn: fact_delivery.facility_key
+	toColumn: dim_facility.facility_key
+
+relationship AutoDetected_9609a77b-0d73-48a6-a06a-43b5c1f9cdfc
+	fromColumn: fact_delivery.route_key
+	toColumn: dim_route.route_key
+
+relationship AutoDetected_4db6e336-d544-4873-b659-3c18b9c40f74
+	fromColumn: fact_trip.route_key
+	toColumn: dim_route.route_key
+
+relationship AutoDetected_ec49bd7d-4cf6-4abe-856b-88b24201ba86
+	fromColumn: fact_trip.trailer_key
+	toColumn: dim_trailer.trailer_key
+
+relationship AutoDetected_e4701138-71c1-4f01-ae80-2853da57bd40
+	fromColumn: fact_delivery.truck_key
+	toColumn: dim_truck.truck_key
+
+relationship AutoDetected_20465e4e-e3b4-48bf-bb6a-f787c7dd0608
+	fromColumn: fact_fuel_purchase.truck_key
+	toColumn: dim_truck.truck_key
+
+relationship AutoDetected_ce115bb6-f169-4a2b-aae3-3e02b1e1b22c
+	fromColumn: fact_maintenance.truck_key
+	toColumn: dim_truck.truck_key
+
+relationship AutoDetected_48953729-232f-408f-b983-31ec3231ea3c
+	fromColumn: fact_safety.truck_key
+	toColumn: dim_truck.truck_key
+
+relationship AutoDetected_869f58b4-7b40-45e3-a680-2950bb177d18
+	fromColumn: fact_trip.truck_key
+	toColumn: dim_truck.truck_key
+
+relationship AutoDetected_a494581f-eb57-4eb5-9f14-6e07ecb007dd
+	isActive: false
+	fromColumn: fact_delivery.load_id
+	toColumn: fact_trip.load_id
+
+relationship AutoDetected_194a87ff-1d24-4252-9188-26551c8659f6
+	isActive: false
+	fromColumn: fact_fuel_purchase.trip_id
+	toColumn: fact_trip.trip_id
+
+relationship AutoDetected_e2b6bd2f-b6c7-4d72-999e-afa784ec5cd9
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: fact_safety.trip_id
+	toColumn: fact_trip.trip_id
+

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخطط قاعدة بيانات اللوجستيات (Star Schema)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'dark',
+            securityLevel: 'loose',
+            er: {
+                diagramPadding: 60,
+                layoutDirection: 'TB',
+                minEntityWidth: 280,
+                minEntityHeight: 75,
+                entityPadding: 35,
+                stroke: '#38bdf8',
+                fill: '#1e293b',
+                fontSize: 14
+            }
+        });
+    </script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --fact-color: #fbbf24;
+            --dim-color: #34d399;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent), #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .diagram-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 60px;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 85vh;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: grab;
+        }
+
+        .diagram-container:active {
+            cursor: grabbing;
+        }
+
+        .mermaid {
+            min-width: 1500px;
+            text-align: center;
+        }
+
+        .mermaid .er.entityBox { fill: #1e293b !important; stroke: var(--accent) !important; }
+        .mermaid .er.attributeBoxEven { fill: #0f172a !important; }
+        .mermaid .er.attributeBoxOdd { fill: #1e293b !important; }
+        .mermaid .er.relationshipLabelBox { fill: #0f172a !important; stroke: var(--accent) !important; }
+        .mermaid .er.relationshipLabel { fill: #fff !important; }
+        .mermaid text { fill: #f8fafc !important; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--accent);
+            opacity: 0.7;
+        }
+
+        .card.fact::before { background: var(--fact-color); }
+        .card.dim::before { background: var(--dim-color); }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px var(--accent-glow);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .badge.fact { background: rgba(251, 191, 36, 0.2); color: var(--fact-color); }
+        .badge.dim { background: rgba(52, 211, 153, 0.2); color: var(--dim-color); }
+
+        ul.relations {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+        }
+
+        ul.relations li {
+            position: relative;
+            padding-right: 25px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+        
+        ul.relations li::before {
+            content: '🔗';
+            position: absolute;
+            right: 0;
+            top: 2px;
+            font-size: 0.9rem;
+        }
+
+        .powerbi-section {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid var(--accent);
+            border-radius: 24px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.1);
+        }
+
+        .powerbi-section h2 {
+            font-size: 2rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .steps li {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            counter-increment: step-counter;
+            transition: all 0.3s ease;
+        }
+
+        .steps li:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: var(--accent);
+            color: #fff;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .steps li strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>مخطط قاعدة بيانات اللوجستيات (Star Schema)</h1>
+            <p class="subtitle">تصميم مرئي شامل يوضح كافة الجداول، الأعمدة، والروابط بين الأبعاد (Dimensions) والحقائق (Facts) — نموذج متصل بالكامل</p>
+        </header>
+
+        <h2 style="color: #fff; margin-bottom: 20px; font-size: 1.8rem; text-align: right;">الرسم البياني لهيكل الجداول والروابط (ER Diagram)</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">يمكنك التمرير يميناً ويساراً (Scroll) لرؤية باقي التفاصيل داخل الرسم إذا كانت الشاشة غير كافية.</p>
+
+        <!-- ER Diagram Container -->
+        <div class="diagram-container" dir="ltr">
+            <div class="mermaid">
+erDiagram
+    dim_driver {
+        Key driver_key PK
+        Col driver_id
+        Col first_name
+        Col last_name
+        Col full_name
+        Col hire_date
+        Col termination_date
+        Col license_number
+        Col license_state
+        Col date_of_birth
+        Col home_terminal
+        Col employment_status
+        Col cdl_class
+        Col years_experience
+        Col dwh_create_date
+    }
+    dim_truck {
+        Key truck_key PK
+        Col truck_id
+        Col unit_number
+        Col make
+        Col model_year
+        Col vin
+        Col acquisition_date
+        Col acquisition_mileage
+        Col fuel_type
+        Col tank_capacity_gallons
+        Col status
+        Col home_terminal
+        Col truck_age_years
+        Col dwh_create_date
+    }
+    dim_trailer {
+        Key trailer_key PK
+        Col trailer_id
+        Col trailer_number
+        Col trailer_type
+        Col length_feet
+        Col model_year
+        Col vin
+        Col acquisition_date
+        Col status
+        Col current_location
+        Col dwh_create_date
+    }
+    dim_customer {
+        Key customer_key PK
+        Col customer_id
+        Col customer_name
+        Col customer_type
+        Col credit_terms_days
+        Col primary_freight_type
+        Col account_status
+        Col contract_start_date
+        Col annual_revenue_potential
+        Col dwh_create_date
+    }
+    dim_facility {
+        Key facility_key PK
+        Col facility_id
+        Col facility_name
+        Col facility_type
+        Col city
+        Col state
+        Col latitude
+        Col longitude
+        Col dock_doors
+        Col operating_hours
+        Col dwh_create_date
+    }
+    dim_route {
+        Key route_key PK
+        Col route_id
+        Col origin_city
+        Col origin_state
+        Col destination_city
+        Col destination_state
+        Col typical_distance_miles
+        Col base_rate_per_mile
+        Col fuel_surcharge_rate
+        Col typical_transit_days
+        Col lane_description
+        Col dwh_create_date
+    }
+    dim_date {
+        Key date_key PK
+        Col full_date
+        Col year
+        Col quarter
+        Col month
+        Col month_name
+        Col week
+        Col day_of_month
+        Col day_of_week
+        Col day_name
+        Col is_weekend
+        Col year_month
+    }
+    fact_trip {
+        Key trip_key PK
+        Ref driver_key FK
+        Ref truck_key FK
+        Ref trailer_key FK
+        Ref customer_key FK
+        Ref route_key FK
+        Ref dispatch_date_key FK
+        Col trip_id
+        Col load_id
+        Col actual_distance_miles
+        Col actual_duration_hours
+        Col fuel_gallons_used
+        Col average_mpg
+        Col idle_time_hours
+        Col revenue
+        Col fuel_surcharge
+        Col accessorial_charges
+        Col total_revenue
+        Col weight_lbs
+        Col pieces
+        Col load_type
+        Col load_status
+        Col booking_type
+        Col trip_status
+        Col dwh_create_date
+    }
+    fact_fuel_purchase {
+        Key fuel_purchase_key PK
+        Ref driver_key FK
+        Ref truck_key FK
+        Ref purchase_date_key FK
+        Col fuel_purchase_id
+        Col trip_id
+        Col gallons
+        Col price_per_gallon
+        Col total_cost
+        Col location_city
+        Col location_state
+        Col fuel_card_number
+        Col dwh_create_date
+    }
+    fact_maintenance {
+        Key maintenance_key PK
+        Ref truck_key FK
+        Ref maintenance_date_key FK
+        Col maintenance_id
+        Col odometer_reading
+        Col labor_hours
+        Col labor_cost
+        Col parts_cost
+        Col total_cost
+        Col downtime_hours
+        Col maintenance_type
+        Col facility_location
+        Col service_description
+        Col dwh_create_date
+    }
+    fact_safety {
+        Key safety_key PK
+        Ref driver_key FK
+        Ref truck_key FK
+        Ref incident_date_key FK
+        Col incident_id
+        Col trip_id
+        Col vehicle_damage_cost
+        Col cargo_damage_cost
+        Col claim_amount
+        Col total_damage_cost
+        Col incident_type
+        Col location_city
+        Col location_state
+        Col at_fault_flag
+        Col injury_flag
+        Col preventable_flag
+        Col description
+        Col dwh_create_date
+    }
+    fact_delivery {
+        Key delivery_key PK
+        Ref facility_key FK
+        Ref driver_key FK
+        Ref truck_key FK
+        Ref customer_key FK
+        Ref route_key FK
+        Ref event_date_key FK
+        Col event_id
+        Col load_id
+        Col trip_id
+        Col detention_minutes
+        Col event_type
+        Col scheduled_datetime
+        Col actual_datetime
+        Col on_time_flag
+        Col location_city
+        Col location_state
+        Col dwh_create_date
+    }
+
+    dim_driver ||--o{ fact_trip : "driver_key"
+    dim_truck ||--o{ fact_trip : "truck_key"
+    dim_trailer ||--o{ fact_trip : "trailer_key"
+    dim_customer ||--o{ fact_trip : "customer_key"
+    dim_route ||--o{ fact_trip : "route_key"
+    dim_date ||--o{ fact_trip : "dispatch_date_key"
+
+    dim_driver ||--o{ fact_fuel_purchase : "driver_key"
+    dim_truck ||--o{ fact_fuel_purchase : "truck_key"
+    dim_date ||--o{ fact_fuel_purchase : "purchase_date_key"
+
+    dim_truck ||--o{ fact_maintenance : "truck_key"
+    dim_date ||--o{ fact_maintenance : "maintenance_date_key"
+
+    dim_driver ||--o{ fact_safety : "driver_key"
+    dim_truck ||--o{ fact_safety : "truck_key"
+    dim_date ||--o{ fact_safety : "incident_date_key"
+
+    dim_facility ||--o{ fact_delivery : "facility_key"
+    dim_driver ||--o{ fact_delivery : "driver_key"
+    dim_truck ||--o{ fact_delivery : "truck_key"
+    dim_customer ||--o{ fact_delivery : "customer_key"
+    dim_route ||--o{ fact_delivery : "route_key"
+    dim_date ||--o{ fact_delivery : "event_date_key"
+            </div>
+        </div>
+
+        <h2 style="margin-bottom: 20px; color: #fff;">جداول الحقائق (Fact Tables) - مركز البيانات</h2>
+        <div class="grid">
+            <div class="card fact">
+                <h3>fact_trip <span class="badge fact">جدول حقائق</span></h3>
+                <p class="subtitle">تفاصيل الرحلات، الإيرادات، والمسافات</p>
+                <ul class="relations">
+                    <li>يرتبط بـ <strong>dim_driver</strong> (عبر driver_key)</li>
+                    <li>يرتبط بـ <strong>dim_truck</strong> (عبر truck_key)</li>
+                    <li>يرتبط بـ <strong>dim_trailer</strong> (عبر trailer_key)</li>
+                    <li>يرتبط بـ <strong>dim_customer</strong> (عبر customer_key)</li>
+                    <li>يرتبط بـ <strong>dim_route</strong> (عبر route_key)</li>
+                    <li>يرتبط بـ <strong>dim_date</strong> (عبر dispatch_date_key)</li>
+                </ul>
+            </div>
+
+            <div class="card fact">
+                <h3>fact_fuel_purchase <span class="badge fact">جدول حقائق</span></h3>
+                <p class="subtitle">مشتريات الوقود والتكاليف</p>
+                <ul class="relations">
+                    <li>يرتبط بـ <strong>dim_driver</strong> (عبر driver_key)</li>
+                    <li>يرتبط بـ <strong>dim_truck</strong> (عبر truck_key)</li>
+                    <li>يرتبط بـ <strong>dim_date</strong> (عبر purchase_date_key)</li>
+                </ul>
+            </div>
+
+            <div class="card fact">
+                <h3>fact_maintenance <span class="badge fact">جدول حقائق</span></h3>
+                <p class="subtitle">سجلات الصيانة والتكاليف</p>
+                <ul class="relations">
+                    <li>يرتبط بـ <strong>dim_truck</strong> (عبر truck_key)</li>
+                    <li>يرتبط بـ <strong>dim_date</strong> (عبر maintenance_date_key)</li>
+                </ul>
+            </div>
+
+            <div class="card fact">
+                <h3>fact_safety <span class="badge fact">جدول حقائق</span></h3>
+                <p class="subtitle">حوادث الأمان والمخالفات</p>
+                <ul class="relations">
+                    <li>يرتبط بـ <strong>dim_driver</strong> (عبر driver_key)</li>
+                    <li>يرتبط بـ <strong>dim_truck</strong> (عبر truck_key)</li>
+                    <li>يرتبط بـ <strong>dim_date</strong> (عبر incident_date_key)</li>
+                </ul>
+            </div>
+
+            <div class="card fact">
+                <h3>fact_delivery <span class="badge fact">جدول حقائق ✨ محسّن</span></h3>
+                <p class="subtitle">أوقات التسليم والاستلام — متصل بالكامل بجميع الأبعاد</p>
+                <ul class="relations">
+                    <li>يرتبط بـ <strong>dim_facility</strong> (عبر facility_key)</li>
+                    <li>يرتبط بـ <strong>dim_driver</strong> (عبر driver_key) ⭐ جديد</li>
+                    <li>يرتبط بـ <strong>dim_truck</strong> (عبر truck_key) ⭐ جديد</li>
+                    <li>يرتبط بـ <strong>dim_customer</strong> (عبر customer_key) ⭐ جديد</li>
+                    <li>يرتبط بـ <strong>dim_route</strong> (عبر route_key) ⭐ جديد</li>
+                    <li>يرتبط بـ <strong>dim_date</strong> (عبر event_date_key) ⭐ جديد</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 style="margin-bottom: 20px; color: #fff;">جداول الأبعاد (Dimension Tables) - تفاصيل البيانات</h2>
+        <div class="grid">
+            <div class="card dim">
+                <h3>dim_driver <span class="badge dim">جدول أبعاد</span></h3>
+                <p class="subtitle">بيانات السائقين (الاسم، الرخصة، الخبرة)</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">يرتبط كـ 1-to-Many مع: الرحلات، الوقود، الأمان، التسليم.</p>
+            </div>
+            
+            <div class="card dim">
+                <h3>dim_truck <span class="badge dim">جدول أبعاد</span></h3>
+                <p class="subtitle">بيانات الشاحنات (الموديل، سنة الصنع، الحالة)</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">يرتبط كـ 1-to-Many مع: الرحلات، الوقود، الصيانة، الأمان، التسليم.</p>
+            </div>
+
+            <div class="card dim">
+                <h3>dim_date <span class="badge dim">جدول أبعاد</span></h3>
+                <p class="subtitle">التواريخ (السنة، الشهر، الربع، عطلة أم لا)</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">يرتبط بكل جداول الحقائق الخمسة لتحليل البيانات عبر الزمن.</p>
+            </div>
+            
+            <div class="card dim">
+                <h3>dim_customer <span class="badge dim">جدول أبعاد</span></h3>
+                <p class="subtitle">بيانات العملاء ونوع العقود</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">يرتبط بجدول الرحلات (fact_trip) و التسليم (fact_delivery).</p>
+            </div>
+
+            <div class="card dim">
+                <h3>dim_route <span class="badge dim">جدول أبعاد</span></h3>
+                <p class="subtitle">المسارات من نقطة البداية للنهاية والمسافات</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">يرتبط بجدول الرحلات (fact_trip) و التسليم (fact_delivery).</p>
+            </div>
+
+            <div class="card dim">
+                <h3>dim_trailer <span class="badge dim">جدول أبعاد</span></h3>
+                <p class="subtitle">المقطورات وأنواعها</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">يرتبط بجدول الرحلات (fact_trip).</p>
+            </div>
+
+            <div class="card dim">
+                <h3>dim_facility <span class="badge dim">جدول أبعاد</span></h3>
+                <p class="subtitle">المستودعات والمرافق</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">يرتبط بجدول التسليم (fact_delivery).</p>
+            </div>
+        </div>
+
+        <div class="powerbi-section">
+            <h2>
+                <svg viewBox="0 0 24 24" fill="none" style="width: 35px; height: 35px;"><path d="M15.5 3H21v18h-5.5V3zm-6.5 7h5.5v11H9V10zm-6.5 5h5.5v6H2.5v-6z" fill="#F2C811"/></svg>
+                دليل الربط مع Power BI
+            </h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">كيفية استيراد وبناء نموذج البيانات (Data Modeling) بطريقة احترافية داخل Power BI.</p>
+            
+            <ol class="steps">
+                <li>
+                    <strong>الاتصال بقاعدة البيانات</strong>
+                    من قائمة Home اختر Get Data ثم SQL Server. ادخل السيرفر <code>localhost\SQLEXPRESS</code> واسم قاعدة البيانات <code>logistics_dwh</code>.
+                </li>
+                <li>
+                    <strong>استيراد طبقة الـ Gold فقط</strong>
+                    في نافذة Navigator، قم بتحديد الجداول التي تبدأ بـ <code>gold.dim_</code> و <code>gold.fact_</code> وتجاهل جداول bronze و silver.
+                </li>
+                <li>
+                    <strong>بناء العلاقات (Model View)</strong>
+                    انتقل إلى نافذة Model View في Power BI. البرنامج قد يتعرف تلقائياً على العلاقات بسبب تشابه أسماء المفاتيح (مثل driver_key).
+                </li>
+                <li>
+                    <strong>ضبط اتجاه الفلترة</strong>
+                    تأكد أن جميع العلاقات من جداول الأبعاد (Dim) إلى جداول الحقائق (Fact) هي علاقات من نوع <strong>1 إلى متعدد (1-to-Many)</strong>، واتجاه الفلترة (Cross filter direction) مضبوط على <strong>Single</strong>.
+                </li>
+                <li>
+                    <strong>تنظيف النموذج للمستخدم</strong>
+                    انتقل لـ Report View، واضغط كليك يمين على الأعمدة التي تنتهي بـ <code>_key</code> (Surrogate Keys) في جميع الجداول واختر <strong>Hide in report view</strong> لكي يظهر للمستخدم النهائي أسماء مفهومة فقط كالإيرادات وأسماء السائقين.
+                </li>
+                <li>
+                    <strong>جداول القياسات (Measures)</strong>
+                    يُفضل إنشاء جدول فارغ باسم <code>_Measures</code> لتجميع كل المعادلات (DAX) بداخله، مثل إجمالي الإيرادات، أو نسبة التسليم في الميعاد.
+                </li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

@@ -191,8 +191,13 @@ GO
 CREATE TABLE gold.fact_delivery
   (
      delivery_key       INT IDENTITY(1,1)  NOT NULL,
-     -- Dimension keys
+     -- Dimension keys (conformed — connects to full star)
      facility_key       INT                NULL,
+     driver_key         INT                NULL,
+     truck_key          INT                NULL,
+     customer_key       INT                NULL,
+     route_key          INT                NULL,
+     event_date_key     INT                NULL,
      -- Natural keys
      event_id           NVARCHAR(20)       NOT NULL,
      load_id            NVARCHAR(20)       NULL,
@@ -212,3 +217,64 @@ CREATE TABLE gold.fact_delivery
   );
 
 GO
+
+-- ============================================================
+-- Performance Indexes — Fact Table Foreign Keys
+-- ============================================================
+-- These non-clustered indexes accelerate dimension lookups
+-- (e.g. Power BI filter/slicer operations) by avoiding
+-- full table scans on FK columns.
+-- ============================================================
+
+-- fact_trip indexes
+CREATE NONCLUSTERED INDEX ix_fact_trip_driver_key
+    ON gold.fact_trip (driver_key);
+CREATE NONCLUSTERED INDEX ix_fact_trip_truck_key
+    ON gold.fact_trip (truck_key);
+CREATE NONCLUSTERED INDEX ix_fact_trip_trailer_key
+    ON gold.fact_trip (trailer_key);
+CREATE NONCLUSTERED INDEX ix_fact_trip_customer_key
+    ON gold.fact_trip (customer_key);
+CREATE NONCLUSTERED INDEX ix_fact_trip_route_key
+    ON gold.fact_trip (route_key);
+CREATE NONCLUSTERED INDEX ix_fact_trip_dispatch_date_key
+    ON gold.fact_trip (dispatch_date_key);
+
+-- fact_fuel_purchase indexes
+CREATE NONCLUSTERED INDEX ix_fact_fuel_driver_key
+    ON gold.fact_fuel_purchase (driver_key);
+CREATE NONCLUSTERED INDEX ix_fact_fuel_truck_key
+    ON gold.fact_fuel_purchase (truck_key);
+CREATE NONCLUSTERED INDEX ix_fact_fuel_purchase_date_key
+    ON gold.fact_fuel_purchase (purchase_date_key);
+
+-- fact_maintenance indexes
+CREATE NONCLUSTERED INDEX ix_fact_maint_truck_key
+    ON gold.fact_maintenance (truck_key);
+CREATE NONCLUSTERED INDEX ix_fact_maint_date_key
+    ON gold.fact_maintenance (maintenance_date_key);
+
+-- fact_safety indexes
+CREATE NONCLUSTERED INDEX ix_fact_safety_driver_key
+    ON gold.fact_safety (driver_key);
+CREATE NONCLUSTERED INDEX ix_fact_safety_truck_key
+    ON gold.fact_safety (truck_key);
+CREATE NONCLUSTERED INDEX ix_fact_safety_date_key
+    ON gold.fact_safety (incident_date_key);
+
+-- fact_delivery indexes
+CREATE NONCLUSTERED INDEX ix_fact_delivery_facility_key
+    ON gold.fact_delivery (facility_key);
+CREATE NONCLUSTERED INDEX ix_fact_delivery_driver_key
+    ON gold.fact_delivery (driver_key);
+CREATE NONCLUSTERED INDEX ix_fact_delivery_truck_key
+    ON gold.fact_delivery (truck_key);
+CREATE NONCLUSTERED INDEX ix_fact_delivery_customer_key
+    ON gold.fact_delivery (customer_key);
+CREATE NONCLUSTERED INDEX ix_fact_delivery_route_key
+    ON gold.fact_delivery (route_key);
+CREATE NONCLUSTERED INDEX ix_fact_delivery_event_date_key
+    ON gold.fact_delivery (event_date_key);
+
+GO
+

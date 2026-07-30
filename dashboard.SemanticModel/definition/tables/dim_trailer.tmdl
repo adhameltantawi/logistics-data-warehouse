@@ -1,0 +1,122 @@
+table dim_trailer
+	lineageTag: fa8bd968-85ff-415f-a729-58589947ecf1
+
+	column trailer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c4cf5b0-021e-4922-9f14-c08ed8f4a310
+		summarizeBy: none
+		sourceColumn: trailer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column trailer_id
+		dataType: string
+		lineageTag: 0257a1cb-1479-40ea-b2b7-a5a4035453f1
+		summarizeBy: none
+		sourceColumn: trailer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column trailer_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ce4d88a-52b5-43ea-85fc-adea9cfa7cc9
+		summarizeBy: sum
+		sourceColumn: trailer_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column trailer_type
+		dataType: string
+		lineageTag: aca5a9d2-0d37-4a8f-803a-c81e1f3825af
+		summarizeBy: none
+		sourceColumn: trailer_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column length_feet
+		dataType: int64
+		formatString: 0
+		lineageTag: 7417b943-b8a2-4e5e-85fd-0c0686ffd173
+		summarizeBy: sum
+		sourceColumn: length_feet
+
+		annotation SummarizationSetBy = Automatic
+
+	column model_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a1069cd-f769-4cd0-9fd2-a2d6e715efb6
+		summarizeBy: sum
+		sourceColumn: model_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column vin
+		dataType: string
+		lineageTag: 39c7bde0-3b58-4a37-afd2-5808799571a0
+		summarizeBy: none
+		sourceColumn: vin
+
+		annotation SummarizationSetBy = Automatic
+
+	column acquisition_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 265733f4-8afc-43fe-8876-e54e7c30ee59
+		summarizeBy: none
+		sourceColumn: acquisition_date
+
+		variation Variation
+			isDefault
+			relationship: 95010051-025f-4f04-b28a-9f67cca3a46b
+			defaultHierarchy: LocalDateTable_ad9a26e7-fea3-4217-bbc7-5a6024229c03.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column status
+		dataType: string
+		lineageTag: eb2ba519-8121-415a-a6f0-d50752e1d5f8
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column current_location
+		dataType: string
+		lineageTag: e47ddc0c-7119-40df-a03b-92715044eca4
+		summarizeBy: none
+		sourceColumn: current_location
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8c083497-f30e-4bfd-90cd-3e7e63524aad
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: 45aef2f1-8fd2-4c79-984b-38e08d00f1aa
+			defaultHierarchy: LocalDateTable_99b12a77-4b75-4795-b525-c1ffd9670c88.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_trailer = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "dim_trailer", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"trailer_key", Int64.Type}, {"trailer_id", type text}, {"trailer_number", Int64.Type}, {"trailer_type", type text}, {"length_feet", Int64.Type}, {"model_year", Int64.Type}, {"vin", type text}, {"acquisition_date", type date}, {"status", type text}, {"current_location", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

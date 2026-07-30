@@ -1,0 +1,50 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["dim_customer","dim_date","dim_driver","dim_facility","dim_route","dim_trailer","dim_truck","fact_delivery","fact_fuel_purchase","fact_maintenance","fact_safety","fact_trip"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_customer
+ref table DateTableTemplate_e238fdb8-ddae-4d72-b103-97c0c3dc73e0
+ref table LocalDateTable_b91df865-871c-4455-a68b-0352985e9579
+ref table LocalDateTable_3504549a-5fac-4875-8d7c-d4ef572fe453
+ref table dim_date
+ref table LocalDateTable_c038730f-b6b1-4f71-ae17-52725eb91319
+ref table LocalDateTable_b055b850-188b-416e-a0ca-76bc0aaca197
+ref table dim_driver
+ref table LocalDateTable_6d6b97b0-099d-4a8e-bd8b-a04fa044675b
+ref table LocalDateTable_b484e75c-8111-493b-99fc-57c2a51cdf9d
+ref table LocalDateTable_a362b753-5923-485b-b001-b5bf1636df2c
+ref table LocalDateTable_ce5bf5de-6264-4573-8406-66522a3f309e
+ref table dim_facility
+ref table LocalDateTable_83b5f496-c383-49cd-b46b-6e7a4e503253
+ref table dim_route
+ref table LocalDateTable_5583736a-fb98-45a2-bfe7-581a17864977
+ref table dim_trailer
+ref table LocalDateTable_ad9a26e7-fea3-4217-bbc7-5a6024229c03
+ref table LocalDateTable_99b12a77-4b75-4795-b525-c1ffd9670c88
+ref table dim_truck
+ref table LocalDateTable_d7e805ad-ad4b-4469-a078-9289b278dbc5
+ref table LocalDateTable_3b61f389-4320-4255-9759-189b8e53f994
+ref table fact_delivery
+ref table LocalDateTable_9fe9df2e-5e5a-4d98-9c79-e5e67a5d868e
+ref table fact_fuel_purchase
+ref table LocalDateTable_035d2755-a6f3-4be8-990a-c3c3075c6ba9
+ref table fact_maintenance
+ref table LocalDateTable_90b0719c-1db8-4934-b3a9-d6b01312d1e9
+ref table fact_safety
+ref table LocalDateTable_c64c23f5-2a0b-4dcf-b984-ce464180b121
+ref table fact_trip
+ref table LocalDateTable_820c5382-6b7b-418b-8809-13638e623cfa
+
+ref cultureInfo en-US
+

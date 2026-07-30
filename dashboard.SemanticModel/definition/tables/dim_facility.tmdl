@@ -1,0 +1,116 @@
+table dim_facility
+	lineageTag: 6fcb532b-0321-4a58-bf9c-a4be244491d9
+
+	column facility_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 27b47e32-cbb9-4ca7-bd10-5e5965264528
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_id
+		dataType: string
+		lineageTag: 066301f7-677e-4d4c-ab89-f91ec008ef32
+		summarizeBy: none
+		sourceColumn: facility_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_name
+		dataType: string
+		lineageTag: 9ab6df62-37be-49b7-b441-3fe7b4767533
+		summarizeBy: none
+		sourceColumn: facility_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_type
+		dataType: string
+		lineageTag: 083fba1e-8303-4f2f-b6b4-74ef72efe1b5
+		summarizeBy: none
+		sourceColumn: facility_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 7b802860-053f-483f-a23d-3bbe0fc7bc9f
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 9df354b5-5636-4b39-ae24-cf9a8892c09a
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: 2789bdeb-487f-4f9d-9691-5ba4dba50604
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		lineageTag: ef2babb3-5ab5-412d-a36c-8401955006a2
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column dock_doors
+		dataType: int64
+		formatString: 0
+		lineageTag: 739291e0-78c8-4b99-b3b6-0a290471af05
+		summarizeBy: sum
+		sourceColumn: dock_doors
+
+		annotation SummarizationSetBy = Automatic
+
+	column operating_hours
+		dataType: string
+		lineageTag: 4536a1db-4e5b-439d-9414-414216572de4
+		summarizeBy: none
+		sourceColumn: operating_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column dwh_create_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 13f239eb-e129-448a-b8e2-21226374215a
+		summarizeBy: none
+		sourceColumn: dwh_create_date
+
+		variation Variation
+			isDefault
+			relationship: e228f4e3-e0e8-4445-9413-6ef3ca5de5c4
+			defaultHierarchy: LocalDateTable_83b5f496-c383-49cd-b46b-6e7a4e503253.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_facility = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("E:\data\logistics-data-warehouse\logistics_dwh_gold.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "dim_facility", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"facility_key", Int64.Type}, {"facility_id", type text}, {"facility_name", type text}, {"facility_type", type text}, {"city", type text}, {"state", type text}, {"latitude", type number}, {"longitude", type number}, {"dock_doors", Int64.Type}, {"operating_hours", type text}, {"dwh_create_date", type datetime}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

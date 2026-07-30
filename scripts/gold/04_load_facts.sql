@@ -242,7 +242,8 @@ BEGIN
         PRINT '>> Loading Data into Table: gold.fact_delivery';
         INSERT INTO gold.fact_delivery
         (
-            facility_key,
+            facility_key, driver_key, truck_key,
+            customer_key, route_key, event_date_key,
             event_id, load_id, trip_id,
             detention_minutes,
             event_type, scheduled_datetime, actual_datetime,
@@ -250,6 +251,11 @@ BEGIN
         )
         SELECT
             df.facility_key,
+            dd.driver_key,
+            dt.truck_key,
+            dc.customer_key,
+            dr.route_key,
+            CAST(FORMAT(t.dispatch_date, 'yyyyMMdd') AS INT)               AS event_date_key,
             de.event_id,
             de.load_id,
             de.trip_id,
@@ -261,8 +267,20 @@ BEGIN
             de.location_city,
             de.location_state
         FROM silver.delivery_events de
+        LEFT JOIN silver.trips t
+            ON de.trip_id = t.trip_id
+        LEFT JOIN silver.loads l
+            ON de.load_id = l.load_id
         LEFT JOIN gold.dim_facility df
-            ON de.facility_id = df.facility_id;
+            ON de.facility_id = df.facility_id
+        LEFT JOIN gold.dim_driver dd
+            ON t.driver_id = dd.driver_id
+        LEFT JOIN gold.dim_truck dt
+            ON t.truck_id = dt.truck_id
+        LEFT JOIN gold.dim_customer dc
+            ON l.customer_id = dc.customer_id
+        LEFT JOIN gold.dim_route dr
+            ON l.route_id = dr.route_id;
 
         SELECT @rows = @@ROWCOUNT;
         SET @end_time = SYSDATETIME();
