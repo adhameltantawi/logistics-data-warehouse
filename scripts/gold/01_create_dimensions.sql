@@ -215,6 +215,8 @@ CREATE TABLE gold.dim_date
      day_of_week    INT          NOT NULL,
      day_name       NVARCHAR(10) NOT NULL,
      is_weekend     BIT          NOT NULL,
+     is_holiday     BIT          NOT NULL DEFAULT 0,  -- 1 = US Federal Holiday
+     holiday_name   NVARCHAR(50) NULL,                -- e.g. 'Christmas Day'
      year_month     NVARCHAR(7)  NOT NULL,
      CONSTRAINT pk_dim_date PRIMARY KEY (date_key)
   );

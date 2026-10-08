@@ -264,7 +264,7 @@ BEGIN
         INSERT INTO gold.dim_date
         (
             date_key, full_date, year, quarter, month, month_name,
-            week, day_of_month, day_of_week, day_name, is_weekend, year_month
+            week, day_of_month, day_of_week, day_name, is_weekend, is_holiday, holiday_name, year_month
         )
         SELECT
             CAST(FORMAT(dt, 'yyyyMMdd') AS INT)         AS date_key,
@@ -281,6 +281,59 @@ BEGIN
                 WHEN DATEPART(WEEKDAY, dt) IN (1, 7) THEN 1
                 ELSE 0
             END                                         AS is_weekend,
+            -- -------------------------------------------------------
+            -- US Federal Holidays
+            -- Fixed-date: New Year's Day, Independence Day, Veterans Day,
+            --             Christmas Day, Juneteenth
+            -- Floating:   MLK Day (3rd Mon Jan), Presidents Day (3rd Mon Feb),
+            --             Memorial Day (last Mon May), Labor Day (1st Mon Sep),
+            --             Columbus Day (2nd Mon Oct), Thanksgiving (4th Thu Nov)
+            -- -------------------------------------------------------
+            CASE
+                -- New Year's Day — Jan 1
+                WHEN MONTH(dt) = 1  AND DAY(dt) = 1  THEN 1
+                -- MLK Day — 3rd Monday in January
+                WHEN MONTH(dt) = 1  AND DATEPART(WEEKDAY, dt) = 2
+                     AND DAY(dt) BETWEEN 15 AND 21   THEN 1
+                -- Presidents Day — 3rd Monday in February
+                WHEN MONTH(dt) = 2  AND DATEPART(WEEKDAY, dt) = 2
+                     AND DAY(dt) BETWEEN 15 AND 21   THEN 1
+                -- Memorial Day — last Monday in May
+                WHEN MONTH(dt) = 5  AND DATEPART(WEEKDAY, dt) = 2
+                     AND DAY(dt) > (DAY(EOMONTH(dt)) - 7) THEN 1
+                -- Juneteenth — Jun 19
+                WHEN MONTH(dt) = 6  AND DAY(dt) = 19 THEN 1
+                -- Independence Day — Jul 4
+                WHEN MONTH(dt) = 7  AND DAY(dt) = 4  THEN 1
+                -- Labor Day — 1st Monday in September
+                WHEN MONTH(dt) = 9  AND DATEPART(WEEKDAY, dt) = 2
+                     AND DAY(dt) BETWEEN 1 AND 7     THEN 1
+                -- Columbus Day — 2nd Monday in October
+                WHEN MONTH(dt) = 10 AND DATEPART(WEEKDAY, dt) = 2
+                     AND DAY(dt) BETWEEN 8 AND 14    THEN 1
+                -- Veterans Day — Nov 11
+                WHEN MONTH(dt) = 11 AND DAY(dt) = 11 THEN 1
+                -- Thanksgiving — 4th Thursday in November
+                WHEN MONTH(dt) = 11 AND DATEPART(WEEKDAY, dt) = 5
+                     AND DAY(dt) BETWEEN 22 AND 28   THEN 1
+                -- Christmas Day — Dec 25
+                WHEN MONTH(dt) = 12 AND DAY(dt) = 25 THEN 1
+                ELSE 0
+            END                                         AS is_holiday,
+            CASE
+                WHEN MONTH(dt) = 1  AND DAY(dt) = 1                                     THEN 'New Year''s Day'
+                WHEN MONTH(dt) = 1  AND DATEPART(WEEKDAY, dt) = 2 AND DAY(dt) BETWEEN 15 AND 21 THEN 'MLK Day'
+                WHEN MONTH(dt) = 2  AND DATEPART(WEEKDAY, dt) = 2 AND DAY(dt) BETWEEN 15 AND 21 THEN 'Presidents Day'
+                WHEN MONTH(dt) = 5  AND DATEPART(WEEKDAY, dt) = 2 AND DAY(dt) > (DAY(EOMONTH(dt)) - 7) THEN 'Memorial Day'
+                WHEN MONTH(dt) = 6  AND DAY(dt) = 19                                    THEN 'Juneteenth'
+                WHEN MONTH(dt) = 7  AND DAY(dt) = 4                                     THEN 'Independence Day'
+                WHEN MONTH(dt) = 9  AND DATEPART(WEEKDAY, dt) = 2 AND DAY(dt) BETWEEN 1 AND 7  THEN 'Labor Day'
+                WHEN MONTH(dt) = 10 AND DATEPART(WEEKDAY, dt) = 2 AND DAY(dt) BETWEEN 8 AND 14 THEN 'Columbus Day'
+                WHEN MONTH(dt) = 11 AND DAY(dt) = 11                                    THEN 'Veterans Day'
+                WHEN MONTH(dt) = 11 AND DATEPART(WEEKDAY, dt) = 5 AND DAY(dt) BETWEEN 22 AND 28 THEN 'Thanksgiving'
+                WHEN MONTH(dt) = 12 AND DAY(dt) = 25                                    THEN 'Christmas Day'
+                ELSE NULL
+            END                                         AS holiday_name,
             FORMAT(dt, 'yyyy-MM')                       AS year_month
         FROM date_cte
         OPTION (MAXRECURSION 5000);
