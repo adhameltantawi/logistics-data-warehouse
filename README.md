@@ -209,37 +209,84 @@ The Gold layer implements a **Star Schema** dimensional model optimised for anal
 
 ```text
 logistics-data-warehouse/
-|
-|-- datasets/                            # Source CSV files (not tracked in Git)
-|   |-- reference/                       # Dimension data (drivers, trucks, customers...)
-|   |-- transactions/                    # Operational data (trips, loads, fuel...)
-|   +-- analytics/                       # Pre-aggregated monthly KPIs
-|
-|-- docs/                                # Technical documentation & diagrams
-|   |-- DASHBOARD_PRESENTATION.md        # Dashboard KPIs, insights & recommendations
-|   |-- data_architecture.png            # Medallion architecture overview
-|   |-- data_flow.png                    # End-to-end pipeline data flow
-|   |-- entity_relationships.png         # Entity-relationship diagram
-|   |-- DATASET_OVERVIEW.md              # Dataset source, structure & use cases
-|   +-- DATABASE_SCHEMA.txt              # Table schemas & key relationships
-|
-|-- scripts/                             # All SQL pipeline scripts
-|   |-- init_database.sql                # Database & schema bootstrap (run once)
-|   |-- bronze/                          # Bronze layer - raw ingestion
-|   |-- silver/                          # Silver layer - cleanse & standardise
-|   +-- gold/                            # Gold layer - Star Schema
-|
-|-- tests/                               # Data quality & validation scripts
-|   |-- silver/                          # Silver layer quality checks
-|   +-- gold/                            # Gold layer validation scripts
-|
-|-- dashboard.Report/                    # Power BI Report files
-|-- dashboard.SemanticModel/             # Power BI Data Model files (TMDL)
-|-- logistics_dashboard.html             # Executive Dashboard Mock-up (HTML)
-|-- schema_documentation.html            # Interactive ER Diagram
-|-- logistics_analysis.ipynb             # Data analysis notebook
-+-- README.md                            # This file
+│
+├── datasets/                            # Source CSV files (not tracked in Git — see .gitignore)
+│   ├── reference/                       # Dimension data (drivers, trucks, customers…)
+│   ├── transactions/                    # Operational data (trips, loads, fuel…)
+│   └── analytics/                       # Pre-aggregated monthly KPIs
+│
+├── docs/                                # Technical documentation & diagrams
+│   ├── data_architecture.png            # Medallion architecture overview
+│   ├── data_flow.png                    # End-to-end pipeline data flow
+│   ├── entity_relationships.png         # Entity-relationship diagram
+│   ├── DATASET_OVERVIEW.md              # Dataset source, structure & use cases
+│   ├── DATABASE_SCHEMA.txt              # Table schemas & key relationships
+│   └── POWER_BI_GUIDE.md               # Power BI connection & dashboard setup guide
+│
+├── scripts/                             # All SQL pipeline scripts
+│   ├── init_database.sql                # Database & schema bootstrap (run once)
+│   │
+│   ├── bronze/                          # 🥉 Bronze layer — raw ingestion
+│   │   ├── 01_create_reference.sql      # DDL — reference/dimension tables
+│   │   ├── 02_create_transactions.sql   # DDL — transaction tables
+│   │   ├── 03_create_analytics.sql      # DDL — analytics tables
+│   │   ├── 04_load_reference.sql        # Stored proc — load reference data
+│   │   ├── 05_load_transactions.sql     # Stored proc — load transaction data
+│   │   ├── 06_load_analytics.sql        # Stored proc — load analytics data
+│   │   ├── 07_load_bronze_layer.sql     # Master orchestrator (single entry point)
+│   │   └── 08_create_pipeline_log.sql   # Pipeline audit log table + helper proc
+│   │
+│   ├── silver/                          # 🥈 Silver layer — cleanse & standardise
+│   │   ├── 01_create_reference.sql      # DDL — silver reference tables + audit col
+│   │   ├── 02_create_transactions.sql   # DDL — silver transaction tables + audit col
+│   │   ├── 03_create_analytics.sql      # DDL — silver analytics tables + audit col
+│   │   ├── 04_load_drivers.sql          # Stored proc — cleanse & load drivers
+│   │   ├── 05_load_customers.sql        # …customers
+│   │   ├── 06_load_facilities.sql       # …facilities
+│   │   ├── 07_load_routes.sql           # …routes
+│   │   ├── 08_load_trailers.sql         # …trailers
+│   │   ├── 09_load_trucks.sql           # …trucks
+│   │   ├── 10_load_delivery_events.sql  # …delivery events
+│   │   ├── 11_load_fuel_purchases.sql   # …fuel purchases
+│   │   ├── 12_load_loads.sql            # …loads
+│   │   ├── 13_load_maintenance_records.sql  # …maintenance records
+│   │   ├── 14_load_safety_incidents.sql     # …safety incidents
+│   │   ├── 15_load_trips.sql            # …trips
+│   │   ├── 16_load_driver_monthly_metrics.sql   # …driver metrics
+│   │   ├── 17_load_truck_utilization_metrics.sql # …truck metrics
+│   │   ├── 18_load_silver_layer.sql     # Master orchestrator (single entry point)
+│   │   └── 19_load_single_table.sql     # Parameterized single-table re-run wrapper
+│   │
+│   ├── gold/                            # 🥇 Gold layer — Star Schema
+│   │   ├── 01_create_dimensions.sql     # DDL — 7 dimension tables (surrogate keys)
+│   │   ├── 02_create_facts.sql          # DDL — 5 fact tables
+│   │   ├── 03_load_dimensions.sql       # Stored proc — load all dimensions + date dim
+│   │   ├── 04_load_facts.sql            # Stored proc — load all facts
+│   │   ├── 05_load_gold_layer.sql       # Master orchestrator (single entry point)
+│   │   ├── 06_create_indexes.sql        # Non-clustered indexes on FK columns
+│   │   ├── 07_create_fk_constraints.sql # Foreign key constraints (fact → dimension)
+│   │   ├── 08_scd2_dim_driver.sql       # SCD Type 2 MERGE procedure for dim_driver
+│   │   └── 09_extended_properties.sql   # Column-level MS_Description documentation
+│   │
+│   └── analytics/                       # 📊 Analytics layer — business intelligence
+│       ├── 01_business_questions.sql    # 8 business question queries
+│       └── 02_create_kpi_views.sql      # KPI views: driver, route, fleet, fuel
+│
+├── tests/                               # Data quality & validation scripts
+│   ├── bronze/                          # 🥉 Bronze layer quality checks
+│   │   └── 01_quality_checks_bronze.sql # Row counts, NULL PKs, empty table detection
+│   ├── silver/                          # 🥈 Silver layer quality checks (16 scripts)
+│   └── gold/                            # 🥇 Gold layer validation scripts (2 scripts)
+│
+├── .github/
+│   └── workflows/
+│       └── sql-lint.yml                 # GitHub Actions CI — sqlfluff SQL linting
+│
+├── run_pipeline.ps1                     # PowerShell end-to-end pipeline runner
+├── .gitignore                           # Excludes datasets/, OS files, SQL Server artefacts
+└── README.md                            # This file
 ```
+
 
 ---
 

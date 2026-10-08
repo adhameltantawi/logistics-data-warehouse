@@ -1,0 +1,86 @@
+# ==============================================================================
+# GitHub Actions CI — Logistics Data Warehouse
+# Workflow: sql-lint.yml
+#
+# Purpose:
+#   Runs on every push and pull request to main/master.
+#   Lints all SQL files using sqlfluff to catch syntax errors,
+#   style violations, and formatting issues before they reach production.
+#
+# To enable:
+#   1. Push this file to .github/workflows/sql-lint.yml
+#   2. GitHub Actions picks it up automatically (no extra config needed)
+#
+# sqlfluff docs: https://docs.sqlfluff.com
+# Dialect: tsql (SQL Server / T-SQL)
+# ==============================================================================
+
+name: SQL Lint
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - "scripts/**"
+      - "tests/**"
+  pull_request:
+    branches: [ "main", "master" ]
+    paths:
+      - "scripts/**"
+      - "tests/**"
+
+jobs:
+  lint:
+    name: Lint SQL Files
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------------
+      # 1. Checkout the repository
+      # ------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # 2. Set up Python (sqlfluff requires Python 3.8+)
+      # ------------------------------------------------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # ------------------------------------------------------------------
+      # 3. Install sqlfluff
+      # ------------------------------------------------------------------
+      - name: Install sqlfluff
+        run: pip install sqlfluff==3.*
+
+      # ------------------------------------------------------------------
+      # 4. Lint all SQL scripts (non-zero exit = workflow fails)
+      # ------------------------------------------------------------------
+      - name: Lint scripts/
+        run: |
+          sqlfluff lint scripts/ \
+            --dialect tsql \
+            --exclude-rules L016,L031 \
+            --ignore templating
+        # L016: line length (relaxed for DWH scripts with long column lists)
+        # L031: table aliases not needed for single-table queries
+        # --ignore templating: don't fail on dynamic SQL / EXEC patterns
+
+      # ------------------------------------------------------------------
+      # 5. Lint test scripts
+      # ------------------------------------------------------------------
+      - name: Lint tests/
+        run: |
+          sqlfluff lint tests/ \
+            --dialect tsql \
+            --exclude-rules L016,L031 \
+            --ignore templating
+
+      # ------------------------------------------------------------------
+      # 6. Print summary on success
+      # ------------------------------------------------------------------
+      - name: Report
+        if: success()
+        run: echo "All SQL files passed lint checks."
