@@ -20,12 +20,13 @@
 
 - [Business Context](#business-context)
 - [Solution Architecture](#solution-architecture)
-- [Dashboard & Analytics](#dashboard--analytics)
 - [Entity Relationships](#entity-relationships)
 - [Data Flow](#data-flow)
 - [Star Schema](#star-schema)
 - [Data Sources](#data-sources)
+- [Data Catalog](#-data-catalog)
 - [Project Structure](#project-structure)
+- [Quick Setup](#-quick-setup)
 - [Pipeline Execution](#pipeline-execution)
 - [Testing & Data Quality](#testing--data-quality)
 - [Business Questions](#business-questions-this-project-answers)
@@ -205,6 +206,35 @@ The Gold layer implements a **Star Schema** dimensional model optimised for anal
 
 ---
 
+## 📖 Data Catalog
+
+The **Gold layer** is the authoritative analytics-ready data — fully documented for data analysts, BI developers, and report builders.
+
+📄 **[Full Data Catalog → docs/DATA_CATALOG.md](docs/DATA_CATALOG.md)**
+
+### What's in the catalog
+
+| Object | Type | Grain / Purpose |
+|---|---|---|
+| `gold.dim_driver` | Dimension | One row per driver version (SCD2) |
+| `gold.dim_truck` | Dimension | One row per fleet truck |
+| `gold.dim_trailer` | Dimension | One row per trailer |
+| `gold.dim_customer` | Dimension | One row per customer account |
+| `gold.dim_facility` | Dimension | One row per terminal / warehouse |
+| `gold.dim_route` | Dimension | One row per origin-destination lane |
+| `gold.dim_date` | Dimension | One row per calendar day (2020–2030), with `is_holiday` + `holiday_name` |
+| `gold.fact_trip` | Fact | One row per completed trip — revenue, miles, fuel, duration |
+| `gold.fact_fuel_purchase` | Fact | One row per fuel stop — gallons, cost, location |
+| `gold.fact_maintenance` | Fact | One row per service event — labor, parts, downtime |
+| `gold.fact_safety` | Fact | One row per incident — damage costs, at-fault, preventable flags |
+| `gold.fact_delivery` | Fact | One row per pickup/delivery event — detention, on-time flag |
+| `gold.vw_driver_performance` | KPI View | Driver trips, miles, revenue, safety incidents, on-time % |
+| `gold.vw_route_profitability` | KPI View | Lane revenue, revenue/mile, trip count |
+| `gold.vw_fleet_utilization` | KPI View | Truck trips, miles, revenue, maintenance — monthly grain |
+| `gold.vw_fuel_efficiency` | KPI View | Actual vs expected MPG by driver and truck |
+
+---
+
 ## Project Structure
 
 ```text
@@ -221,6 +251,7 @@ logistics-data-warehouse/
 │   ├── entity_relationships.png         # Entity-relationship diagram
 │   ├── DATASET_OVERVIEW.md              # Dataset source, structure & use cases
 │   ├── DATABASE_SCHEMA.txt              # Table schemas & key relationships
+│   ├── DATA_CATALOG.md                  # 📖 Gold layer data catalog (for analysts)
 │   └── POWER_BI_GUIDE.md               # Power BI connection & dashboard setup guide
 │
 ├── scripts/                             # All SQL pipeline scripts
@@ -273,8 +304,6 @@ logistics-data-warehouse/
 │       └── 02_create_kpi_views.sql      # KPI views: driver, route, fleet, fuel
 │
 ├── tests/                               # Data quality & validation scripts
-│   ├── bronze/                          # 🥉 Bronze layer quality checks
-│   │   └── 01_quality_checks_bronze.sql # Row counts, NULL PKs, empty table detection
 │   ├── silver/                          # 🥈 Silver layer quality checks (16 scripts)
 │   └── gold/                            # 🥇 Gold layer validation scripts (2 scripts)
 │
