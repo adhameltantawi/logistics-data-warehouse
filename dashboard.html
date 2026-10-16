@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logistics Operations Dashboard | 2022–2024</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f2f5;--card:#fff;--header:#1a2a4a;--accent:#118dff;--orange:#e66c37;
+  --green:#22a06b;--red:#d13438;--purple:#6966ff;--yellow:#f2c94c;
+  --text:#252423;--muted:#666;--border:#e8e8e8;--shadow:0 2px 8px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+/* HEADER */
+.header{background:var(--header);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.header-left{display:flex;align-items:center;gap:14px;}
+.logo{width:42px;height:42px;background:linear-gradient(135deg,#118dff,#6966ff);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.header h1{color:#fff;font-size:20px;font-weight:700;letter-spacing:.3px;}
+.header p{color:#b0c4de;font-size:12px;margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:20px;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;color:#e0e8f5;font-size:12px;font-weight:500;}
+/* TABS */
+.tabs{background:#fff;border-bottom:2px solid var(--border);padding:0 32px;display:flex;gap:0;overflow-x:auto;}
+.tab{padding:14px 22px;font-size:13px;font-weight:500;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:.2s;margin-bottom:-2px;}
+.tab.active,.tab:hover{color:var(--accent);border-color:var(--accent);}
+/* PAGES */
+.page{display:none;padding:24px 32px;}
+.page.active{display:block;}
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;}
+.kpi-card{background:var(--card);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);border-left:4px solid var(--accent);position:relative;overflow:hidden;transition:.2s;}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12);}
+.kpi-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;opacity:.06;}
+.kpi-card.green{border-color:var(--green);} .kpi-card.green::after{background:var(--green);}
+.kpi-card.orange{border-color:var(--orange);} .kpi-card.orange::after{background:var(--orange);}
+.kpi-card.red{border-color:var(--red);} .kpi-card.red::after{background:var(--red);}
+.kpi-card.purple{border-color:var(--purple);} .kpi-card.purple::after{background:var(--purple);}
+.kpi-card.yellow{border-color:var(--yellow);} .kpi-card.yellow::after{background:var(--yellow);}
+.kpi-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.kpi-value{font-size:26px;font-weight:700;color:var(--text);line-height:1;}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:6px;}
+.kpi-icon{position:absolute;top:16px;right:16px;font-size:22px;opacity:.25;}
+/* CHART GRID */
+.chart-grid{display:grid;gap:20px;margin-bottom:20px;}
+.grid-2{grid-template-columns:2fr 1fr;}
+.grid-2r{grid-template-columns:1fr 2fr;}
+.grid-3{grid-template-columns:1fr 1fr 1fr;}
+.grid-equal{grid-template-columns:1fr 1fr;}
+.chart-card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);}
+.chart-card.full{grid-column:1/-1;}
+.chart-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.chart-title .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
+.chart-subtitle{font-size:11px;color:var(--muted);margin-bottom:16px;}
+.chart-wrap{position:relative;}
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:#f7f9fb;color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);}
+td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border:none;}
+tr:hover td{background:#f7f9fb;}
+.rank{background:var(--header);color:#fff;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:700;}
+.driver-name{font-weight:600;}
+.pct-good{color:var(--green);font-weight:600;}
+.pct-warn{color:var(--orange);font-weight:600;}
+.pct-bad{color:var(--red);font-weight:600;}
+/* INSIGHT BOXES */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px;}
+.insight{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);border-top:4px solid var(--accent);}
+.insight.warn{border-color:var(--orange);}
+.insight.good{border-color:var(--green);}
+.insight.bad{border-color:var(--red);}
+.insight h4{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.insight p{font-size:12px;color:var(--muted);line-height:1.7;}
+.insight strong{color:var(--text);}
+/* SECTION DIVIDER */
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:24px 0 12px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+/* RESPONSIVE */
+@media(max-width:900px){.grid-2,.grid-2r,.grid-3,.grid-equal{grid-template-columns:1fr;}}
+@media(max-width:600px){.page{padding:16px;} .header{padding:14px 16px;}}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px;} ::-webkit-scrollbar-track{background:#f0f2f5;} ::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <div class="logo">🚛</div>
+    <div>
+      <h1>Logistics Operations Dashboard</h1>
+      <p>Class 8 Trucking Fleet · United States · 2022–2024</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="badge">📅 Jan 2022 – Dec 2024</span>
+    <span class="badge">🔄 Gold Layer Analytics</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPage('overview')">📊 Overview</div>
+  <div class="tab" onclick="showPage('operations')">🚚 Operations</div>
+  <div class="tab" onclick="showPage('fleet')">🔧 Fleet & Maintenance</div>
+  <div class="tab" onclick="showPage('drivers')">👤 Drivers</div>
+  <div class="tab" onclick="showPage('routes')">🗺️ Routes & Revenue</div>
+</div>
+
+<!-- ===== OVERVIEW PAGE ===== -->
+<div class="page active" id="overview">
+
+<div class="kpi-grid" style="margin-top:8px;">
+  <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-label">Total Revenue</div><div class="kpi-value">$298.6M</div><div class="kpi-sub">3-year cumulative · 2022–2024</div></div>
+  <div class="kpi-card green"><div class="kpi-icon">✅</div><div class="kpi-label">Trips Completed</div><div class="kpi-value">85,410</div><div class="kpi-sub">100% completion rate</div></div>
+  <div class="kpi-card purple"><div class="kpi-icon">📍</div><div class="kpi-label">Total Miles</div><div class="kpi-value">122.2M</div><div class="kpi-sub">Actual miles driven</div></div>
+  <div class="kpi-card orange"><div class="kpi-icon">⛽</div><div class="kpi-label">Avg Fuel Economy</div><div class="kpi-value">6.5 MPG</div><div class="kpi-sub">Fleet average</div></div>
+  <div class="kpi-card red"><div class="kpi-icon">💸</div><div class="kpi-label">Total Fuel Cost</div><div class="kpi-value">$95.6M</div><div class="kpi-sub">32% of total revenue</div></div>
+  <div class="kpi-card yellow"><div class="kpi-icon">🚛</div><div class="kpi-label">Fleet Utilization</div><div class="kpi-value">83.0%</div><div class="kpi-sub">Average across all trucks</div></div>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi-card"><div class="kpi-icon">🔧</div><div class="kpi-label">Maintenance Cost</div><div class="kpi-value">$5.73M</div><div class="kpi-sub">Total 3-year spend</div></div>
+  <div class="kpi-card orange"><div class="kpi-icon">⏱️</div><div class="kpi-label">Avg Idle Time</div><div class="kpi-value">7.01 hrs</div><div class="kpi-sub">Per trip</div></div>
+  <div class="kpi-card red"><div class="kpi-icon">⚠️</div><div class="kpi-label">Safety Incidents</div><div class="kpi-value">170</div><div class="kpi-sub">Across all years</div></div>
+  <div class="kpi-card green"><div class="kpi-icon">🕐</div><div class="kpi-label">On-Time Delivery</div><div class="kpi-value">44.6%</div><div class="kpi-sub">Fleet avg OTD rate</div></div>
+  <div class="kpi-card purple"><div class="kpi-icon">📦</div><div class="kpi-label">Dedicated Revenue</div><div class="kpi-value">$148.1M</div><div class="kpi-sub">49.6% of total bookings</div></div>
+  <div class="kpi-card yellow"><div class="kpi-icon">❄️</div><div class="kpi-label">Refrigerated Loads</div><div class="kpi-value">42,946</div><div class="kpi-sub">50.3% of load mix</div></div>
+</div>
+
+<div class="chart-grid grid-2">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot"></span>Monthly Revenue Trend</div>
+    <div class="chart-subtitle">Total revenue ($M) by month · 2022–2024</div>
+    <div class="chart-wrap"><canvas id="monthlyRevChart" height="220"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#6966ff"></span>Year-over-Year Summary</div>
+    <div class="chart-subtitle">Annual revenue ($M) comparison</div>
+    <div class="chart-wrap"><canvas id="yearlyRevChart" height="220"></canvas></div>
+  </div>
+</div>
+
+<div class="chart-grid grid-3">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#e66c37"></span>Booking Type Revenue</div>
+    <div class="chart-subtitle">Revenue split by booking category ($M)</div>
+    <div class="chart-wrap"><canvas id="bookingChart" height="220"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#22a06b"></span>Load Type Mix</div>
+    <div class="chart-subtitle">Loads by freight type</div>
+    <div class="chart-wrap"><canvas id="loadTypeChart" height="220"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#f2c94c"></span>Quarterly Revenue</div>
+    <div class="chart-subtitle">Revenue ($M) per quarter</div>
+    <div class="chart-wrap"><canvas id="quarterlyChart" height="220"></canvas></div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== OPERATIONS PAGE ===== -->
+<div class="page" id="operations">
+
+<div class="chart-grid grid-equal">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#22a06b"></span>On-Time Delivery Rate</div>
+    <div class="chart-subtitle">Monthly OTD % · fleet average</div>
+    <div class="chart-wrap"><canvas id="otdChart" height="240"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#118dff"></span>Monthly Miles Driven</div>
+    <div class="chart-subtitle">Total fleet miles per month</div>
+    <div class="chart-wrap"><canvas id="milesChart" height="240"></canvas></div>
+  </div>
+</div>
+
+<div class="chart-grid grid-equal">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#e66c37"></span>Fuel Price Trend ($/gal)</div>
+    <div class="chart-subtitle">Average price per gallon by month</div>
+    <div class="chart-wrap"><canvas id="fuelPriceChart" height="240"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#d13438"></span>Safety Incidents by Type</div>
+    <div class="chart-subtitle">Incident count distribution</div>
+    <div class="chart-wrap"><canvas id="incidentTypeChart" height="240"></canvas></div>
+  </div>
+</div>
+
+<div class="chart-card full">
+  <div class="chart-title"><span class="dot" style="background:#f2c94c"></span>Yearly Operational Comparison</div>
+  <div class="chart-subtitle">Trips, fuel cost, maintenance cost and incidents by year</div>
+  <div class="chart-wrap"><canvas id="yearlyOpsChart" height="180"></canvas></div>
+</div>
+
+</div>
+
+<!-- ===== FLEET PAGE ===== -->
+<div class="page" id="fleet">
+
+<div class="kpi-grid" style="margin-top:8px;">
+  <div class="kpi-card"><div class="kpi-label">Avg Truck Utilization</div><div class="kpi-value">83.0%</div><div class="kpi-sub">Fleet-wide monthly average</div></div>
+  <div class="kpi-card orange"><div class="kpi-label">Total Maintenance Cost</div><div class="kpi-value">$5.73M</div><div class="kpi-sub">2022–2024</div></div>
+  <div class="kpi-card red"><div class="kpi-label">Maintenance Events</div><div class="kpi-value">2,920</div><div class="kpi-sub">Across all trucks</div></div>
+  <div class="kpi-card green"><div class="kpi-label">Avg Fleet MPG</div><div class="kpi-value">6.5</div><div class="kpi-sub">Per trip average</div></div>
+  <div class="kpi-card purple"><div class="kpi-label">Total Fuel Spend</div><div class="kpi-value">$95.6M</div><div class="kpi-sub">3-year cumulative</div></div>
+  <div class="kpi-card yellow"><div class="kpi-label">Avg Idle Hrs/Trip</div><div class="kpi-value">7.01</div><div class="kpi-sub">Engine-on, stationary</div></div>
+</div>
+
+<div class="chart-grid grid-equal">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#6966ff"></span>Fleet Utilization Rate</div>
+    <div class="chart-subtitle">Monthly average truck utilization %</div>
+    <div class="chart-wrap"><canvas id="utilChart" height="240"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#e66c37"></span>Maintenance Cost by Type ($K)</div>
+    <div class="chart-subtitle">Total cost breakdown by maintenance category</div>
+    <div class="chart-wrap"><canvas id="maintTypeChart" height="240"></canvas></div>
+  </div>
+</div>
+
+<div class="chart-grid grid-equal">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#d13438"></span>Monthly Maintenance Cost ($K)</div>
+    <div class="chart-subtitle">Total fleet maintenance spend over time</div>
+    <div class="chart-wrap"><canvas id="maintCostChart" height="240"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#22a06b"></span>Safety Incident Breakdown</div>
+    <div class="chart-subtitle">Type and count of all recorded incidents</div>
+    <div class="chart-wrap"><canvas id="safetyChart" height="240"></canvas></div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== DRIVERS PAGE ===== -->
+<div class="page" id="drivers">
+
+<div class="section-label">Top 10 Drivers by Revenue Generated</div>
+
+<div class="chart-grid grid-equal" style="margin-bottom:20px;">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot"></span>Driver Revenue Ranking ($M)</div>
+    <div class="chart-subtitle">Top 10 drivers by total revenue</div>
+    <div class="chart-wrap"><canvas id="driverRevChart" height="280"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#22a06b"></span>Driver On-Time Rate (%)</div>
+    <div class="chart-subtitle">Top 10 drivers by OTD performance</div>
+    <div class="chart-wrap"><canvas id="driverOtdChart" height="280"></canvas></div>
+  </div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title"><span class="dot" style="background:#6966ff"></span>Driver Performance Table – Top 10</div>
+  <div class="chart-subtitle">Revenue, trips, miles and on-time delivery rate</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Driver Name</th><th>Revenue</th><th>Trips</th><th>Miles</th><th>OTD %</th><th>Avg MPG</th></tr></thead>
+      <tbody><tr>
+      <td><span class="rank">#1</span></td>
+      <td class="driver-name">Linda Davis</td>
+      <td>$2,311,844</td>
+      <td>723</td>
+      <td>1,074,677</td>
+      <td><span class="pct-warn">43.4%</span></td>
+      <td>6.5</td>
+    </tr>
+<tr>
+      <td><span class="rank">#2</span></td>
+      <td class="driver-name">Joseph Jones</td>
+      <td>$2,311,328</td>
+      <td>735</td>
+      <td>1,073,445</td>
+      <td><span class="pct-warn">47.7%</span></td>
+      <td>6.52</td>
+    </tr>
+<tr>
+      <td><span class="rank">#3</span></td>
+      <td class="driver-name">Barbara Gonzalez</td>
+      <td>$2,305,057</td>
+      <td>729</td>
+      <td>1,064,844</td>
+      <td><span class="pct-warn">46.0%</span></td>
+      <td>6.52</td>
+    </tr>
+<tr>
+      <td><span class="rank">#4</span></td>
+      <td class="driver-name">Thomas Gonzalez</td>
+      <td>$2,278,575</td>
+      <td>712</td>
+      <td>1,042,631</td>
+      <td><span class="pct-warn">45.0%</span></td>
+      <td>6.49</td>
+    </tr>
+<tr>
+      <td><span class="rank">#5</span></td>
+      <td class="driver-name">Robert Jackson</td>
+      <td>$2,275,655</td>
+      <td>749</td>
+      <td>1,060,268</td>
+      <td><span class="pct-warn">44.9%</span></td>
+      <td>6.47</td>
+    </tr>
+<tr>
+      <td><span class="rank">#6</span></td>
+      <td class="driver-name">Thomas Gonzalez</td>
+      <td>$2,272,318</td>
+      <td>702</td>
+      <td>1,047,108</td>
+      <td><span class="pct-warn">42.1%</span></td>
+      <td>6.5</td>
+    </tr>
+<tr>
+      <td><span class="rank">#7</span></td>
+      <td class="driver-name">Linda Jones</td>
+      <td>$2,269,106</td>
+      <td>721</td>
+      <td>1,059,718</td>
+      <td><span class="pct-warn">45.2%</span></td>
+      <td>6.49</td>
+    </tr>
+<tr>
+      <td><span class="rank">#8</span></td>
+      <td class="driver-name">Richard Garcia</td>
+      <td>$2,256,067</td>
+      <td>705</td>
+      <td>1,039,157</td>
+      <td><span class="pct-warn">44.7%</span></td>
+      <td>6.5</td>
+    </tr>
+<tr>
+      <td><span class="rank">#9</span></td>
+      <td class="driver-name">Linda Wilson</td>
+      <td>$2,229,521</td>
+      <td>703</td>
+      <td>1,034,233</td>
+      <td><span class="pct-warn">45.4%</span></td>
+      <td>6.51</td>
+    </tr>
+<tr>
+      <td><span class="rank">#10</span></td>
+      <td class="driver-name">William Anderson</td>
+      <td>$2,214,003</td>
+      <td>725</td>
+      <td>1,029,613</td>
+      <td><span class="pct-warn">41.9%</span></td>
+      <td>6.52</td>
+    </tr>
+</tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== ROUTES PAGE ===== -->
+<div class="page" id="routes">
+
+<div class="chart-card full" style="margin-bottom:20px;">
+  <div class="chart-title"><span class="dot" style="background:#e66c37"></span>Top 8 Routes by Revenue ($M)</div>
+  <div class="chart-subtitle">Most profitable shipping lanes</div>
+  <div class="chart-wrap"><canvas id="routeRevChart" height="220"></canvas></div>
+</div>
+
+<div class="chart-grid grid-equal">
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot"></span>Trip Volume per Route</div>
+    <div class="chart-subtitle">Number of loads completed per lane</div>
+    <div class="chart-wrap"><canvas id="routeTripChart" height="280"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title"><span class="dot" style="background:#22a06b"></span>Revenue by Booking Type</div>
+    <div class="chart-subtitle">Spot vs Dedicated vs Contract ($M)</div>
+    <div class="chart-wrap"><canvas id="revBookingChart" height="280"></canvas></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ====== DATA ======
+const MR_LABELS = ["Jan '22", "Feb '22", "Mar '22", "Apr '22", "May '22", "Jun '22", "Jul '22", "Aug '22", "Sep '22", "Oct '22", "Nov '22", "Dec '22", "Jan '23", "Feb '23", "Mar '23", "Apr '23", "May '23", "Jun '23", "Jul '23", "Aug '23", "Sep '23", "Oct '23", "Nov '23", "Dec '23", "Jan '24", "Feb '24", "Mar '24", "Apr '24", "May '24", "Jun '24", "Jul '24", "Aug '24", "Sep '24", "Oct '24", "Nov '24", "Dec '24"];
+const MR_VALUES = [8.61, 7.49, 8.41, 8.13, 8.54, 8.34, 8.4, 8.79, 8.09, 8.53, 8.26, 8.34, 8.45, 7.54, 8.54, 8.29, 8.24, 8.27, 8.61, 8.18, 8.0, 8.43, 8.23, 8.14, 8.41, 7.93, 8.48, 8.1, 8.61, 8.51, 8.33, 8.35, 8.14, 8.54, 8.08, 8.32];
+const MM_LABELS = ["Jan '22", "Feb '22", "Mar '22", "Apr '22", "May '22", "Jun '22", "Jul '22", "Aug '22", "Sep '22", "Oct '22", "Nov '22", "Dec '22", "Jan '23", "Feb '23", "Mar '23", "Apr '23", "May '23", "Jun '23", "Jul '23", "Aug '23", "Sep '23", "Oct '23", "Nov '23", "Dec '23", "Jan '24", "Feb '24", "Mar '24", "Apr '24", "May '24", "Jun '24", "Jul '24", "Aug '24", "Sep '24", "Oct '24", "Nov '24", "Dec '24"];
+const MM_VALUES = [3543097, 3077246, 3444911, 3322700, 3464112, 3424911, 3476307, 3587068, 3292513, 3500002, 3355957, 3398447, 3489756, 3068238, 3495090, 3405112, 3369039, 3368390, 3500505, 3367443, 3294666, 3467415, 3357313, 3313966, 3430157, 3259009, 3455950, 3320989, 3525548, 3470010, 3389639, 3409862, 3317974, 3496454, 3323308, 3376097];
+const MU_LABELS = ["Jan '22", "Feb '22", "Mar '22", "Apr '22", "May '22", "Jun '22", "Jul '22", "Aug '22", "Sep '22", "Oct '22", "Nov '22", "Dec '22", "Jan '23", "Feb '23", "Mar '23", "Apr '23", "May '23", "Jun '23", "Jul '23", "Aug '23", "Sep '23", "Oct '23", "Nov '23", "Dec '23", "Jan '24", "Feb '24", "Mar '24", "Apr '24", "May '24", "Jun '24", "Jul '24", "Aug '24", "Sep '24", "Oct '24", "Nov '24", "Dec '24"];
+const MU_VALUES = [84.9, 82.9, 81.1, 83.6, 83.3, 84.4, 82.8, 85.9, 82.0, 85.0, 84.0, 81.8, 83.9, 80.9, 83.0, 83.3, 80.7, 82.2, 83.9, 80.7, 82.8, 82.5, 83.9, 80.0, 81.6, 83.3, 83.6, 83.7, 83.8, 86.1, 82.3, 83.2, 83.2, 84.7, 83.9, 81.0];
+const MFP_LABELS = ["Jan '22", "Feb '22", "Mar '22", "Apr '22", "May '22", "Jun '22", "Jul '22", "Aug '22", "Sep '22", "Oct '22", "Nov '22", "Dec '22", "Jan '23", "Feb '23", "Mar '23", "Apr '23", "May '23", "Jun '23", "Jul '23", "Aug '23", "Sep '23", "Oct '23", "Nov '23", "Dec '23", "Jan '24", "Feb '24", "Mar '24", "Apr '24", "May '24", "Jun '24", "Jul '24", "Aug '24", "Sep '24", "Oct '24", "Nov '24", "Dec '24"];
+const MFP_VALUES = [4.215, 4.197, 4.196, 4.199, 4.204, 4.194, 4.193, 4.201, 4.188, 4.203, 4.189, 4.195, 3.854, 3.84, 3.86, 3.858, 3.851, 3.845, 3.848, 3.848, 3.844, 3.852, 3.847, 3.847, 3.652, 3.651, 3.644, 3.651, 3.648, 3.655, 3.647, 3.646, 3.651, 3.649, 3.646, 3.654];
+const MOT_LABELS = ["Jan '22", "Feb '22", "Mar '22", "Apr '22", "May '22", "Jun '22", "Jul '22", "Aug '22", "Sep '22", "Oct '22", "Nov '22", "Dec '22", "Jan '23", "Feb '23", "Mar '23", "Apr '23", "May '23", "Jun '23", "Jul '23", "Aug '23", "Sep '23", "Oct '23", "Nov '23", "Dec '23", "Jan '24", "Feb '24", "Mar '24", "Apr '24", "May '24", "Jun '24", "Jul '24", "Aug '24", "Sep '24", "Oct '24", "Nov '24", "Dec '24"];
+const MOT_VALUES = [43.9, 44.4, 46.6, 44.2, 44.4, 44.9, 44.2, 45.8, 43.2, 45.7, 44.4, 44.2, 44.5, 43.4, 43.7, 46.0, 44.8, 44.7, 46.0, 42.5, 46.2, 44.6, 44.5, 43.0, 45.4, 44.6, 43.2, 45.7, 45.3, 45.4, 44.1, 43.8, 43.5, 45.6, 45.1, 43.9];
+const MMC_LABELS = ["Jan '22", "Feb '22", "Mar '22", "Apr '22", "May '22", "Jun '22", "Jul '22", "Aug '22", "Sep '22", "Oct '22", "Nov '22", "Dec '22", "Jan '23", "Feb '23", "Mar '23", "Apr '23", "May '23", "Jun '23", "Jul '23", "Aug '23", "Sep '23", "Oct '23", "Nov '23", "Dec '23", "Jan '24", "Feb '24", "Mar '24", "Apr '24", "May '24", "Jun '24", "Jul '24", "Aug '24", "Sep '24", "Oct '24", "Nov '24", "Dec '24"];
+const MMC_VALUES = [173.9, 128.7, 150.9, 206.0, 155.4, 158.7, 149.0, 164.8, 157.5, 168.4, 148.0, 170.6, 160.9, 117.9, 175.0, 164.7, 187.2, 192.4, 150.6, 177.3, 139.6, 199.8, 162.0, 147.4, 180.9, 119.1, 154.9, 149.0, 120.7, 191.7, 133.5, 141.1, 144.2, 176.2, 153.3, 159.2];
+const YR_LABELS = ['2022', '2023', '2024'];
+const YR_REV = [99.9, 98.9, 99.8];
+const YR_TRIPS = [28589, 28165, 28656];
+const YR_FUEL = [34.35, 31.07, 30.08];
+const YR_MAINT = [1.932, 1.975, 1.824];
+const YR_INC = [56, 54, 60];
+const ROUTE_LABELS = ["Charlotte -> Portland", "Seattle -> Charlotte", "Columbus -> Portland", "Philadelphia -> Seattle", "Phoenix -> Philadelphia", "Columbus -> Los Angeles", "Charlotte -> Seattle", "Seattle -> Indianapolis"];
+const ROUTE_REV = [11.23, 10.93, 10.91, 10.86, 10.54, 10.38, 9.86, 8.81];
+const ROUTE_TRIPS = [1410, 1467, 1525, 1465, 1507, 1534, 1447, 1445];
+const LT_LABELS = ["Dry Van", "Refrigerated"];
+const LT_VALUES = [42464, 42946];
+const BK_LABELS = ["Spot", "Dedicated", "Contract"];
+const BK_REV = [75.4, 148.1, 75.1];
+const INC_LABELS = ["Moving Violation", "Customer Complaint", "Equipment Damage", "DOT Violation", "Accident"];
+const INC_VALUES = [27, 34, 35, 39, 35];
+const MT_LABELS = ["Inspection", "Tire", "Preventive", "Repair", "Transmission", "Brake", "Engine"];
+const MT_COST = [220.0, 919.0, 964.0, 945.0, 880.0, 912.0, 891.0];
+const MT_COUNT = [432, 414, 422, 424, 411, 402, 415];
+const DR_NAMES = ["Linda Davis", "Joseph Jones", "Barbara Gonzalez", "Thomas Gonzalez", "Robert Jackson", "Thomas Gonzalez", "Linda Jones", "Richard Garcia", "Linda Wilson", "William Anderson"];
+const DR_REV = [2.312, 2.311, 2.305, 2.279, 2.276, 2.272, 2.269, 2.256, 2.23, 2.214];
+const DR_TRIPS = [723, 735, 729, 712, 749, 702, 721, 705, 703, 725];
+const DR_OTD = [43.4, 47.7, 46.0, 45.0, 44.9, 42.1, 45.2, 44.7, 45.4, 41.9];
+const QR_LABELS = ["2022 Q1", "2022 Q2", "2022 Q3", "2022 Q4", "2023 Q1", "2023 Q2", "2023 Q3", "2023 Q4", "2024 Q1", "2024 Q2", "2024 Q3", "2024 Q4"];
+const QR_VALUES = [24.51, 25.0, 25.28, 25.13, 24.52, 24.8, 24.79, 24.79, 24.82, 25.22, 24.81, 24.94];
+
+// ====== CHART DEFAULTS ======
+Chart.defaults.font.family = 'Inter, sans-serif';
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#888';
+
+const BLUE='#118dff', ORANGE='#e66c37', GREEN='#22a06b', RED='#d13438',
+      PURPLE='#6966ff', YELLOW='#f2c94c', TEAL='#00b4d8', PINK='#f06292';
+const PALETTE = [BLUE, ORANGE, GREEN, RED, PURPLE, YELLOW, TEAL, PINK];
+
+function lineOpts(label, color) {
+  return {
+    type:'line', plugins:{legend:{display:false}},
+    scales:{x:{grid:{display:false},ticks:{maxRotation:45,minRotation:45,maxTicksLimit:12}},y:{grid:{color:'#f0f2f5'}}},
+  };
+}
+
+// Monthly Revenue
+new Chart(document.getElementById('monthlyRevChart'), {
+  type:'line',
+  data:{labels:MR_LABELS, datasets:[{label:'Revenue ($M)', data:MR_VALUES, borderColor:BLUE, backgroundColor:'rgba(17,141,255,.08)', fill:true, tension:.4, pointRadius:2}]},
+  options:{responsive:true, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>'$'+c.parsed.y+'M'}}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,maxTicksLimit:12}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'M'}}}}
+});
+
+// Yearly Revenue
+new Chart(document.getElementById('yearlyRevChart'), {
+  type:'bar',
+  data:{labels:YR_LABELS, datasets:[{label:'Revenue ($M)', data:YR_REV, backgroundColor:[BLUE,ORANGE,GREEN], borderRadius:8}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'M'}}}}
+});
+
+// Booking donut
+new Chart(document.getElementById('bookingChart'), {
+  type:'doughnut',
+  data:{labels:BK_LABELS, datasets:[{data:BK_REV, backgroundColor:[BLUE,ORANGE,GREEN], borderWidth:3, hoverOffset:8}]},
+  options:{responsive:true, cutout:'60%', plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>'$'+c.parsed+'M'}}}}
+});
+
+// Load type donut
+new Chart(document.getElementById('loadTypeChart'), {
+  type:'doughnut',
+  data:{labels:LT_LABELS, datasets:[{data:LT_VALUES, backgroundColor:[PURPLE,TEAL], borderWidth:3, hoverOffset:8}]},
+  options:{responsive:true, cutout:'60%', plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>c.parsed.toLocaleString()+' loads'}}}}
+});
+
+// Quarterly
+new Chart(document.getElementById('quarterlyChart'), {
+  type:'bar',
+  data:{labels:QR_LABELS, datasets:[{label:'Revenue ($M)', data:QR_VALUES, backgroundColor:BLUE+'cc', borderRadius:4}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,maxTicksLimit:13}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'M'}}}}
+});
+
+// OTD
+new Chart(document.getElementById('otdChart'), {
+  type:'line',
+  data:{labels:MOT_LABELS, datasets:[{label:'On-Time %', data:MOT_VALUES, borderColor:GREEN, backgroundColor:'rgba(34,160,107,.08)', fill:true, tension:.4, pointRadius:2}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,maxTicksLimit:12}},y:{grid:{color:'#f0f2f5'},min:0,ticks:{callback:v=>v+'%'}}}}
+});
+
+// Miles
+new Chart(document.getElementById('milesChart'), {
+  type:'bar',
+  data:{labels:MM_LABELS, datasets:[{label:'Miles', data:MM_VALUES, backgroundColor:BLUE+'aa', borderRadius:3}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,maxTicksLimit:12}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>(v/1e6).toFixed(1)+'M'}}}}
+});
+
+// Fuel price
+new Chart(document.getElementById('fuelPriceChart'), {
+  type:'line',
+  data:{labels:MFP_LABELS, datasets:[{label:'$/gal', data:MFP_VALUES, borderColor:ORANGE, backgroundColor:'rgba(230,108,55,.08)', fill:true, tension:.4, pointRadius:2}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,maxTicksLimit:12}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v}}}}
+});
+
+// Incident types
+new Chart(document.getElementById('incidentTypeChart'), {
+  type:'pie',
+  data:{labels:INC_LABELS, datasets:[{data:INC_VALUES, backgroundColor:PALETTE, borderWidth:2, hoverOffset:6}]},
+  options:{responsive:true, plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}
+});
+
+// Yearly ops
+new Chart(document.getElementById('yearlyOpsChart'), {
+  type:'bar',
+  data:{labels:YR_LABELS, datasets:[
+    {label:'Revenue ($M)', data:YR_REV, backgroundColor:BLUE, borderRadius:6, yAxisID:'y'},
+    {label:'Fuel Cost ($M)', data:YR_FUEL, backgroundColor:ORANGE, borderRadius:6, yAxisID:'y'},
+    {label:'Maint Cost ($M)', data:YR_MAINT, backgroundColor:RED, borderRadius:6, yAxisID:'y'},
+    {label:'Incidents', data:YR_INC, type:'line', borderColor:YELLOW, pointBackgroundColor:YELLOW, fill:false, tension:.3, yAxisID:'y2'}
+  ]},
+  options:{responsive:true, plugins:{legend:{position:'top'}}, scales:{x:{grid:{display:false}},y:{position:'left',grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'M'}},y2:{position:'right',grid:{display:false},ticks:{color:YELLOW}}}}
+});
+
+// Fleet utilization
+new Chart(document.getElementById('utilChart'), {
+  type:'line',
+  data:{labels:MU_LABELS, datasets:[{label:'Util %', data:MU_VALUES, borderColor:PURPLE, backgroundColor:'rgba(105,102,255,.08)', fill:true, tension:.4, pointRadius:2}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,maxTicksLimit:12}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>v+'%'}}}}
+});
+
+// Maint by type
+new Chart(document.getElementById('maintTypeChart'), {
+  type:'bar',
+  data:{labels:MT_LABELS, datasets:[{label:'Cost ($K)', data:MT_COST, backgroundColor:PALETTE, borderRadius:6}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'K'}}}}
+});
+
+// Monthly maint cost
+new Chart(document.getElementById('maintCostChart'), {
+  type:'bar',
+  data:{labels:MMC_LABELS, datasets:[{label:'Cost ($K)', data:MMC_VALUES, backgroundColor:RED+'99', borderRadius:3}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{maxRotation:45,maxTicksLimit:12}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'K'}}}}
+});
+
+// Safety donut
+new Chart(document.getElementById('safetyChart'), {
+  type:'doughnut',
+  data:{labels:INC_LABELS, datasets:[{data:INC_VALUES, backgroundColor:PALETTE, borderWidth:3, hoverOffset:8}]},
+  options:{responsive:true, cutout:'55%', plugins:{legend:{position:'right', labels:{font:{size:11}}}}}
+});
+
+// Driver revenue
+new Chart(document.getElementById('driverRevChart'), {
+  type:'bar',
+  data:{labels:DR_NAMES, datasets:[{label:'Revenue ($M)', data:DR_REV, backgroundColor:BLUE, borderRadius:6}]},
+  options:{indexAxis:'y', responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'M'}},y:{grid:{display:false}}}}
+});
+
+// Driver OTD
+new Chart(document.getElementById('driverOtdChart'), {
+  type:'bar',
+  data:{labels:DR_NAMES, datasets:[{label:'OTD %', data:DR_OTD, backgroundColor:DR_OTD.map(v=>v>=50?GREEN:v>=40?ORANGE:RED), borderRadius:6}]},
+  options:{indexAxis:'y', responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{color:'#f0f2f5'},min:0,max:100,ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}
+});
+
+// Route revenue
+new Chart(document.getElementById('routeRevChart'), {
+  type:'bar',
+  data:{labels:ROUTE_LABELS, datasets:[{label:'Revenue ($M)', data:ROUTE_REV, backgroundColor:BLUE, borderRadius:6}]},
+  options:{responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{maxRotation:30}},y:{grid:{color:'#f0f2f5'},ticks:{callback:v=>'$'+v+'M'}}}}
+});
+
+// Route trips
+new Chart(document.getElementById('routeTripChart'), {
+  type:'bar',
+  data:{labels:ROUTE_LABELS, datasets:[{label:'Trips', data:ROUTE_TRIPS, backgroundColor:ORANGE, borderRadius:6}]},
+  options:{indexAxis:'y', responsive:true, plugins:{legend:{display:false}}, scales:{x:{grid:{color:'#f0f2f5'}},y:{grid:{display:false}}}}
+});
+
+// Booking by revenue
+new Chart(document.getElementById('revBookingChart'), {
+  type:'doughnut',
+  data:{labels:BK_LABELS, datasets:[{data:BK_REV, backgroundColor:[BLUE,ORANGE,GREEN], borderWidth:3, hoverOffset:8}]},
+  options:{responsive:true, cutout:'55%', plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>'$'+c.parsed+'M'}}}}
+});
+
+// ====== TAB LOGIC ======
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
